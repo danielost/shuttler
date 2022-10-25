@@ -11,4 +11,6 @@ public interface UserService {
     public List<User> getAllUsers() throws EmptyTableException;
     public User getUserById(long id) throws NoSuchUserException;
     public User saveUser(User user) throws EmailTakenException;
+    public long deleteUserById(long id) throws NoSuchUserException;
+    public long updateUser(long id, User user) throws NoSuchUserException;
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.danielost.shuttler.exception.EmailTakenException;
+import ua.nure.danielost.shuttler.exception.NoSuchUserException;
 import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.service.UserService;
 
@@ -21,9 +22,9 @@ public class UserController {
         try {
             userService.saveUser(user);
             return ResponseEntity.ok("User has been saved.");
-        } catch (EmailTakenException ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        } catch (Exception ex) {
+        } catch (EmailTakenException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error");
         }
     }
@@ -46,4 +47,23 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable long id) {
+        try {
+            userService.deleteUserById(id);
+            return ResponseEntity.ok("User id" + id + " has been deleted.");
+        } catch (NoSuchUserException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable long id, @RequestBody User user) {
+        try {
+            userService.updateUser(id, user);
+            return ResponseEntity.ok("User id" + id + " has been updated.");
+        } catch (NoSuchUserException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
