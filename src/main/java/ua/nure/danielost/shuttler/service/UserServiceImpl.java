@@ -9,12 +9,39 @@ import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Override
+    public long deleteUserById(long id) throws NoSuchUserException {
+        if (!userRepository.findById(id).isPresent()) {
+            throw new NoSuchUserException("No users with " + id + " id in database");
+        }
+        userRepository.deleteById(id);
+        return id;
+    }
+
+    @Override
+    public long updateUser(long id, User user) throws NoSuchUserException {
+        Optional<User> foundUser = userRepository.findById(id);
+        if (!foundUser.isPresent()) {
+            throw new NoSuchUserException("No users with " + id + " id in database");
+        }
+
+        User userToUpdate = foundUser.get();
+        userToUpdate.setPassword(user.getPassword());
+        userToUpdate.setEmail(user.getEmail());
+        userToUpdate.setName(user.getName());
+        userToUpdate.setSurname(user.getSurname());
+
+        userRepository.save(userToUpdate);
+        return id;
+    }
 
     @Override
     public List<User> getAllUsers() throws EmptyTableException {
