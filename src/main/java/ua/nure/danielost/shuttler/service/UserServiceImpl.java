@@ -8,6 +8,10 @@ import ua.nure.danielost.shuttler.exception.NoSuchUserException;
 import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.repository.UserRepository;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,11 +65,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) throws EmailTakenException {
+    public User saveUser(User user) throws EmailTakenException, NoSuchAlgorithmException {
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new EmailTakenException("Email is already taken");
         }
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        user.setPassword(toHexString(digest.digest(user.getPassword().getBytes(StandardCharsets.UTF_8))));
+        //FIXME Replace Message digest with BCrypt and create security configuration
 
         return userRepository.save(user);
+    }
+
+    private static String toHexString(byte[] hash)
+    {
+        BigInteger number = new BigInteger(1, hash);
+        StringBuilder hexString = new StringBuilder(number.toString(16));
+        while (hexString.length() < 64)
+        {
+            hexString.insert(0, '0');
+        }
+
+        return hexString.toString();
     }
 }
