@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.exception.EmptyTableException;
 import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
-import ua.nure.danielost.shuttler.exception.NoSuchUserException;
+import ua.nure.danielost.shuttler.exception.RouteAlreadyExistsException;
 import ua.nure.danielost.shuttler.model.Route;
-import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.repository.RouteRepository;
 
 import java.util.List;
@@ -32,7 +31,10 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public Route saveRoute(Route route) {
+    public Route saveRoute(Route route) throws RouteAlreadyExistsException {
+        if (routeRepository.findByNumber(route.getNumber()) != null) {
+            throw new RouteAlreadyExistsException("Route with number " + route.getNumber() + " already exists");
+        }
         return routeRepository.save(route);
     }
 
@@ -55,6 +57,16 @@ public class RouteServiceImpl implements RouteService {
 
         routeRepository.deleteById(id);
         return id;
+    }
+
+    @Override
+    public Route getRouteByNumber(int number) throws NoSuchRouteException {
+        Route foundRoute = routeRepository.findByNumber(number);
+        if (foundRoute == null) {
+            throw new NoSuchRouteException("No routes with " + number + " number in database");
+        }
+
+        return foundRoute;
     }
 
     @Override
