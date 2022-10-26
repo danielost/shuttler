@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.exception.EmailTakenException;
 import ua.nure.danielost.shuttler.exception.EmptyTableException;
+import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
 import ua.nure.danielost.shuttler.exception.NoSuchUserException;
+import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.repository.UserRepository;
 
@@ -20,6 +22,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RouteService routeService;
 
     @Override
     public long deleteUserById(long id) throws NoSuchUserException {
@@ -48,6 +52,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public long saveRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            throw new NoSuchUserException("No users with " + userId + " id in database");
+        }
+        User user = userOptional.get();
+        Route route = routeService.getRouteById(routeId);
+
+        user.saveRoute(route);
+        userRepository.save(user);
+        return userId;
+    }
+
+    @Override
     public List<User> getAllUsers() throws EmptyTableException {
         List<User> users = userRepository.findAll();
         if (users.isEmpty()) {
@@ -64,6 +82,16 @@ public class UserServiceImpl implements UserService {
         }
 
         return foundUser.get();
+    }
+
+    @Override
+    public User getUserByEmail(String email) throws NoSuchUserException {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new NoSuchUserException("No users with " + email + " email in database");
+        }
+
+        return user;
     }
 
     @Override

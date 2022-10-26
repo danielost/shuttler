@@ -1,6 +1,8 @@
 package ua.nure.danielost.shuttler.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -14,7 +16,23 @@ public class User {
     private String email;
     private String password;
 
+    @ManyToMany
+    @JoinTable(
+            name = "saved_route",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "route_id")
+    )
+    private Set<Route> savedRoutes = new HashSet<>();
+
     public User() {}
+
+    public Set<Route> getSavedRoutes() {
+        return savedRoutes;
+    }
+
+    public void setSavedRoutes(Set<Route> savedRoutes) {
+        this.savedRoutes = savedRoutes;
+    }
 
     public long getId() {
         return id;
@@ -54,5 +72,9 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void saveRoute(Route route) {
+        savedRoutes.add(route);
     }
 }

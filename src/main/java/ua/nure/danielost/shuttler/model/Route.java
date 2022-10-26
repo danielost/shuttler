@@ -1,9 +1,10 @@
 package ua.nure.danielost.shuttler.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Route {
@@ -13,7 +14,18 @@ public class Route {
     private long id;
     private int number;
 
-    public Route() {
+    @JsonIgnore
+    @ManyToMany(mappedBy = "savedRoutes")
+    private Set<User> users = new HashSet<>();
+
+    public Route() {}
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     public long getId() {
