@@ -49,19 +49,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() throws EmptyTableException {
-        if (userRepository.findAll().isEmpty()) {
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
             throw new EmptyTableException("No users in database");
         }
-        return userRepository.findAll();
+        return users;
     }
 
     @Override
     public User getUserById(long id) throws NoSuchUserException {
-        if (!userRepository.findById(id).isPresent()) {
+        Optional<User> foundUser = userRepository.findById(id);
+        if (!foundUser.isPresent()) {
             throw new NoSuchUserException("No users with " + id + " id in database");
         }
 
-        return userRepository.findById(id).get();
+        return foundUser.get();
     }
 
     @Override
