@@ -88,6 +88,15 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    public double getCongestion(long id) throws NoSuchRouteException {
+        Optional<Route> routeOptional = routeRepository.findById(id);
+        if (!routeOptional.isPresent()) {
+            throw new NoSuchRouteException("No routes with " + id + " id in database");
+        }
+        return routeOptional.get().getCongestion();
+    }
+
+    @Override
     public List<Route> getAllRoutes() throws EmptyTableException {
         List<Route> routes = routeRepository.findAll();
         if (routes.isEmpty()) {

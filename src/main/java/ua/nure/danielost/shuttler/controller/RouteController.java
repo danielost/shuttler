@@ -53,6 +53,15 @@ public class RouteController {
         }
     }
 
+    @GetMapping("/congestion/{id}")
+    public ResponseEntity<Double> getCongestion(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(routeService.getCongestion(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
     @PostMapping("/add")
     public ResponseEntity<String> addRoute(@RequestBody Route route) {
         try {

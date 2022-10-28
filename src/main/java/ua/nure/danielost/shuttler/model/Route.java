@@ -54,4 +54,17 @@ public class Route {
     public void setNumber(int number) {
         this.number = number;
     }
+
+    public double getCongestion() {
+        Set<Vehicle> routeVehicles = getVehicles();
+
+        int capacity = 0;
+        int passengersAmount = 0;
+        for (Vehicle vehicle: routeVehicles) {
+            capacity += vehicle.getMax_capacity();
+            passengersAmount += vehicle.getCurrent_capacity();
+        }
+
+        return passengersAmount * 1.0 / capacity * 100;
+    }
 }
