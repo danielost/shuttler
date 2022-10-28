@@ -106,6 +106,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public long deleteRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            throw new NoSuchUserException("No users with " + userId + " id in database");
+        }
+        User user = userOptional.get();
+        Route route = routeService.getRouteById(routeId);
+
+        user.deleteRoute(route);
+        userRepository.save(user);
+        return userId;
+    }
+
     private static String toHexString(byte[] hash)
     {
         BigInteger number = new BigInteger(1, hash);

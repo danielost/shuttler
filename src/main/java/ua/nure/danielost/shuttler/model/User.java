@@ -77,4 +77,8 @@ public class User {
     public void saveRoute(Route route) {
         savedRoutes.add(route);
     }
+
+    public void deleteRoute(Route route) {
+        savedRoutes.remove(route);
+    }
 }

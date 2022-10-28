@@ -90,4 +90,15 @@ public class UserController {
         }
     }
 
+    @PutMapping("/{userId}/deleteRoute")
+    public ResponseEntity<String> deleteRouteFromProfile(
+            @PathVariable long userId, @RequestParam long routeId
+    ) {
+        try {
+            userService.deleteRoute(userId, routeId);
+            return ResponseEntity.ok("Route " + routeId + " successfully removed for user " + userId);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

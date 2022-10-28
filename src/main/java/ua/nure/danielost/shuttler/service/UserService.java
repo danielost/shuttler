@@ -17,4 +17,6 @@ public interface UserService {
     public long deleteUserById(long id) throws NoSuchUserException;
     public long updateUser(long id, User user) throws NoSuchUserException;
     public long saveRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException;
+    public long deleteRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException;
+
 }
