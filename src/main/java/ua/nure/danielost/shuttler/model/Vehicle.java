@@ -1,17 +1,19 @@
 package ua.nure.danielost.shuttler.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
 public class Vehicle {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private String vin;
     private String type;
     private int max_capacity;
     private int current_capacity;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "route_id")
     private Route route;
@@ -19,12 +21,12 @@ public class Vehicle {
     public Vehicle() {
     }
 
-    public long getId() {
-        return id;
+    public String getVin() {
+        return vin;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setVin(String vin) {
+        this.vin = vin;
     }
 
     public String getType() {

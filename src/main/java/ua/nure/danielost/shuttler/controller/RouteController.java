@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.danielost.shuttler.model.Route;
+import ua.nure.danielost.shuttler.model.Vehicle;
 import ua.nure.danielost.shuttler.service.RouteService;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/routes")
@@ -37,6 +39,15 @@ public class RouteController {
     public ResponseEntity<Route> getRouteByNumber(@RequestParam int number) {
         try {
             return ResponseEntity.ok(routeService.getRouteByNumber(number));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/getVehicles/{id}")
+    public ResponseEntity<Set<Vehicle>> getRoutesVehicles(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(routeService.getVehicles(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }

@@ -6,12 +6,14 @@ import ua.nure.danielost.shuttler.exception.EmptyTableException;
 import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
 import ua.nure.danielost.shuttler.exception.RouteAlreadyExistsException;
 import ua.nure.danielost.shuttler.model.Route;
+import ua.nure.danielost.shuttler.model.Vehicle;
 import ua.nure.danielost.shuttler.repository.RouteRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class RouteServiceImpl implements RouteService {
@@ -74,6 +76,15 @@ public class RouteServiceImpl implements RouteService {
         }
 
         return foundRoute;
+    }
+
+    @Override
+    public Set<Vehicle> getVehicles(long id) throws NoSuchRouteException {
+        Optional<Route> routeOptional = routeRepository.findById(id);
+        if (!routeOptional.isPresent()) {
+            throw new NoSuchRouteException("No routes with " + id + " id in database");
+        }
+        return routeOptional.get().getVehicles();
     }
 
     @Override

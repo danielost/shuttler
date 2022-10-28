@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ua.nure.danielost.shuttler.model.Vehicle;
 
 @Repository
-public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
+public interface VehicleRepository extends JpaRepository<Vehicle, String> {
 }
