@@ -10,7 +10,6 @@ import ua.nure.danielost.shuttler.model.Vehicle;
 import ua.nure.danielost.shuttler.repository.RouteRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,7 +23,7 @@ public class RouteServiceImpl implements RouteService {
     @Autowired
     private UserRepository userRepository;
 
-    public long updateRouteNumber(long id, Route route) throws NoSuchRouteException {
+    public void updateRouteNumber(long id, Route route) throws NoSuchRouteException {
         Optional<Route> foundRoute = routeRepository.findById(id);
         if (!foundRoute.isPresent()) {
             throw new NoSuchRouteException("No routes with " + id + " id in database");
@@ -34,15 +33,14 @@ public class RouteServiceImpl implements RouteService {
         routeToUpdate.setNumber(route.getNumber());
 
         routeRepository.save(routeToUpdate);
-        return id;
     }
 
     @Override
-    public Route saveRoute(Route route) throws RouteAlreadyExistsException {
+    public void saveRoute(Route route) throws RouteAlreadyExistsException {
         if (routeRepository.findByNumber(route.getNumber()) != null) {
             throw new RouteAlreadyExistsException("Route with number " + route.getNumber() + " already exists");
         }
-        return routeRepository.save(route);
+        routeRepository.save(route);
     }
 
     @Override
@@ -56,7 +54,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public long deleteRoute(long id) throws NoSuchRouteException {
+    public void deleteRoute(long id) throws NoSuchRouteException {
         Optional<Route> foundRoute = routeRepository.findById(id);
         if (!foundRoute.isPresent()) {
             throw new NoSuchRouteException("No routes with " + id + " id in database");
@@ -65,7 +63,6 @@ public class RouteServiceImpl implements RouteService {
         route.getUsers().forEach(user -> user.getSavedRoutes().remove(route));
         userRepository.saveAll(route.getUsers());
         routeRepository.deleteById(id);
-        return id;
     }
 
     @Override

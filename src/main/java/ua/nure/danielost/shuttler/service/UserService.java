@@ -13,10 +13,10 @@ public interface UserService {
     public List<User> getAllUsers() throws EmptyTableException;
     public User getUserById(long id) throws NoSuchUserException;
     public User getUserByEmail(String email) throws NoSuchUserException;
-    public User saveUser(User user) throws EmailTakenException, NoSuchAlgorithmException;
-    public long deleteUserById(long id) throws NoSuchUserException;
-    public long updateUser(long id, User user) throws NoSuchUserException;
-    public long saveRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException;
-    public long deleteRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException;
+    public void saveUser(User user) throws EmailTakenException, NoSuchAlgorithmException;
+    public void deleteUserById(long id) throws NoSuchUserException;
+    public void updateUser(long id, User user) throws NoSuchUserException;
+    public void saveRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException;
+    public void deleteRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException;
 
 }

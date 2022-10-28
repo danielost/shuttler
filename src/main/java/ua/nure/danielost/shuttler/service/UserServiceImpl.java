@@ -26,16 +26,15 @@ public class UserServiceImpl implements UserService {
     private RouteService routeService;
 
     @Override
-    public long deleteUserById(long id) throws NoSuchUserException {
+    public void deleteUserById(long id) throws NoSuchUserException {
         if (!userRepository.findById(id).isPresent()) {
             throw new NoSuchUserException("No users with " + id + " id in database");
         }
         userRepository.deleteById(id);
-        return id;
     }
 
     @Override
-    public long updateUser(long id, User user) throws NoSuchUserException {
+    public void updateUser(long id, User user) throws NoSuchUserException {
         Optional<User> foundUser = userRepository.findById(id);
         if (!foundUser.isPresent()) {
             throw new NoSuchUserException("No users with " + id + " id in database");
@@ -48,11 +47,10 @@ public class UserServiceImpl implements UserService {
         userToUpdate.setSurname(user.getSurname());
 
         userRepository.save(userToUpdate);
-        return id;
     }
 
     @Override
-    public long saveRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException {
+    public void saveRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException {
         Optional<User> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
             throw new NoSuchUserException("No users with " + userId + " id in database");
@@ -62,7 +60,6 @@ public class UserServiceImpl implements UserService {
 
         user.saveRoute(route);
         userRepository.save(user);
-        return userId;
     }
 
     @Override
@@ -95,7 +92,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) throws EmailTakenException, NoSuchAlgorithmException {
+    public void saveUser(User user) throws EmailTakenException, NoSuchAlgorithmException {
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new EmailTakenException("Email is already taken");
         }
@@ -103,11 +100,11 @@ public class UserServiceImpl implements UserService {
         user.setPassword(toHexString(digest.digest(user.getPassword().getBytes(StandardCharsets.UTF_8))));
         //FIXME Replace Message digest with BCrypt and create security configuration
 
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Override
-    public long deleteRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException {
+    public void deleteRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException {
         Optional<User> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
             throw new NoSuchUserException("No users with " + userId + " id in database");
@@ -117,7 +114,6 @@ public class UserServiceImpl implements UserService {
 
         user.deleteRoute(route);
         userRepository.save(user);
-        return userId;
     }
 
     private static String toHexString(byte[] hash)
