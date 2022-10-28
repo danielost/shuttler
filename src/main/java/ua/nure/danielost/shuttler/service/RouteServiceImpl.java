@@ -7,7 +7,9 @@ import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
 import ua.nure.danielost.shuttler.exception.RouteAlreadyExistsException;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.repository.RouteRepository;
+import ua.nure.danielost.shuttler.repository.UserRepository;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +18,9 @@ public class RouteServiceImpl implements RouteService {
 
     @Autowired
     private RouteRepository routeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public long updateRouteNumber(long id, Route route) throws NoSuchRouteException {
         Optional<Route> foundRoute = routeRepository.findById(id);
@@ -54,7 +59,9 @@ public class RouteServiceImpl implements RouteService {
         if (!foundRoute.isPresent()) {
             throw new NoSuchRouteException("No routes with " + id + " id in database");
         }
-
+        Route route = foundRoute.get();
+        route.getUsers().forEach(user -> user.getSavedRoutes().remove(route));
+        userRepository.saveAll(route.getUsers());
         routeRepository.deleteById(id);
         return id;
     }
