@@ -21,7 +21,23 @@ public class Route {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "route")
     private Set<Vehicle> vehicles;
 
+    @ManyToMany
+    @JoinTable(
+            name = "route_stop",
+            joinColumns = @JoinColumn(name = "route_id"),
+            inverseJoinColumns = @JoinColumn(name = "stop_id")
+    )
+    private Set<Stop> stops = new HashSet<>();
+
     public Route() {}
+
+    public Set<Stop> getStops() {
+        return stops;
+    }
+
+    public void setStops(Set<Stop> stops) {
+        this.stops = stops;
+    }
 
     public Set<Vehicle> getVehicles() {
         return vehicles;
