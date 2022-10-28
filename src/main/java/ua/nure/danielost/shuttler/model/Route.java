@@ -18,7 +18,18 @@ public class Route {
     @ManyToMany(mappedBy = "savedRoutes")
     private Set<User> users = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "route")
+    private Set<Vehicle> vehicles;
+
     public Route() {}
+
+    public Set<Vehicle> getVehicles() {
+        return vehicles;
+    }
+
+    public void setVehicles(Set<Vehicle> vehicles) {
+        this.vehicles = vehicles;
+    }
 
     public Set<User> getUsers() {
         return users;
