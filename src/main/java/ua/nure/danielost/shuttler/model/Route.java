@@ -30,7 +30,7 @@ public class Route {
     )
     private Set<Stop> stops = new HashSet<>();
 
-    private enum VehicleType {
+    public enum VehicleType {
         bus,
         tram,
         trolleybus
@@ -101,5 +101,9 @@ public class Route {
         }
 
         return passengersAmount * 1.0 / capacity * 100;
+    }
+
+    public void addStop(Stop stop) {
+        stops.add(stop);
     }
 }

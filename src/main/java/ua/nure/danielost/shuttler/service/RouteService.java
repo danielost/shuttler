@@ -18,4 +18,5 @@ public interface RouteService {
     public Route getRouteByNumber(int number) throws NoSuchRouteException;
     public Set<Vehicle> getVehicles(long id) throws NoSuchRouteException;
     public double getCongestion(long id) throws NoSuchRouteException;
+    public List<Route> getRoutes(Route.VehicleType type);
 }

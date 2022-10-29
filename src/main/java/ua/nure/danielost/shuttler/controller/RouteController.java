@@ -53,6 +53,15 @@ public class RouteController {
         }
     }
 
+    @GetMapping("/type")
+    public ResponseEntity<List<Route>> getRoutesOfType(@RequestParam Route.VehicleType type ) {
+        try {
+            return ResponseEntity.ok(routeService.getRoutes(type));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
     @GetMapping("/congestion/{id}")
     public ResponseEntity<Double> getCongestion(@PathVariable long id) {
         try {

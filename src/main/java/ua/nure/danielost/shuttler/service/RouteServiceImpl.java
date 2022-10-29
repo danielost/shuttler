@@ -36,6 +36,11 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    public List<Route> getRoutes(Route.VehicleType type) {
+        return routeRepository.findByType(type);
+    }
+
+    @Override
     public void saveRoute(Route route) throws RouteAlreadyExistsException {
         if (routeRepository.findByNumber(route.getNumber()) != null) {
             throw new RouteAlreadyExistsException("Route with number " + route.getNumber() + " already exists");
