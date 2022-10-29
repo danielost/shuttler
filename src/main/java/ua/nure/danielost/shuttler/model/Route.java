@@ -13,6 +13,7 @@ public class Route {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private int number;
+    private VehicleType type;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "savedRoutes")
@@ -29,7 +30,21 @@ public class Route {
     )
     private Set<Stop> stops = new HashSet<>();
 
+    private enum VehicleType {
+        bus,
+        tram,
+        trolleybus
+    }
+
     public Route() {}
+
+    public VehicleType getType() {
+        return type;
+    }
+
+    public void setType(VehicleType type) {
+        this.type = type;
+    }
 
     public Set<Stop> getStops() {
         return stops;
@@ -73,6 +88,10 @@ public class Route {
 
     public double getCongestion() {
         Set<Vehicle> routeVehicles = getVehicles();
+
+        if (routeVehicles.isEmpty()) {
+            return 0;
+        }
 
         int capacity = 0;
         int passengersAmount = 0;

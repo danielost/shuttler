@@ -1,5 +1,7 @@
 package ua.nure.danielost.shuttler.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +16,8 @@ public class User {
     private String name;
     private String surname;
     private String email;
+
+    @JsonIgnore
     private String password;
 
     @ManyToMany

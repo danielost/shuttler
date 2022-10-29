@@ -94,7 +94,7 @@ public class VehicleServiceImpl implements VehicleService {
         vehicleToUpdate.setRoute(routeOptional.get());
         vehicleToUpdate.setCurrent_capacity(vehicle.getCurrent_capacity());
         vehicleToUpdate.setMax_capacity(vehicle.getMax_capacity());
-        vehicleToUpdate.setType(vehicle.getType());
+//        vehicleToUpdate.setType(vehicle.getType());
 
         vehicleRepository.save(vehicleToUpdate);
     }

@@ -9,7 +9,7 @@ public class Vehicle {
 
     @Id
     private String vin;
-    private String type;
+//    private String type;
     private int max_capacity;
     private int current_capacity;
 
@@ -29,13 +29,13 @@ public class Vehicle {
         this.vin = vin;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+//    public String getType() {
+//        return type;
+//    }
+//
+//    public void setType(String type) {
+//        this.type = type;
+//    }
 
     public int getMax_capacity() {
         return max_capacity;
