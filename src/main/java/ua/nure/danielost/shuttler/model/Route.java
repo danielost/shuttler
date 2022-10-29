@@ -20,7 +20,7 @@ public class Route {
     private Set<User> users = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "route")
-    private Set<Vehicle> vehicles;
+    private Set<Vehicle> vehicles = new HashSet<>();
 
     @ManyToMany
     @JoinTable(

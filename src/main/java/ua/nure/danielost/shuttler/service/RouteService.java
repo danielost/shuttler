@@ -1,6 +1,7 @@
 package ua.nure.danielost.shuttler.service;
 
 import ua.nure.danielost.shuttler.exception.EmptyTableException;
+import ua.nure.danielost.shuttler.exception.InvalidIdException;
 import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
 import ua.nure.danielost.shuttler.exception.RouteAlreadyExistsException;
 import ua.nure.danielost.shuttler.model.Route;
@@ -19,4 +20,5 @@ public interface RouteService {
     public Set<Vehicle> getVehicles(long id) throws NoSuchRouteException;
     public double getCongestion(long id) throws NoSuchRouteException;
     public List<Route> getRoutes(Route.VehicleType type);
+    public List<Route> getOptimalRoutes(long routeId, long departId, long destinationId) throws NoSuchRouteException, InvalidIdException;
 }

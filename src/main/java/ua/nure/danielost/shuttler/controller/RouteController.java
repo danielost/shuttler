@@ -102,4 +102,17 @@ public class RouteController {
             return ResponseEntity.badRequest().body("Error");
         }
     }
+
+    @GetMapping("/getOptimal/{routeId}")
+    public ResponseEntity<List<Route>> getOptimalRoutes(
+            @PathVariable long routeId,
+            @RequestParam long departId,
+            @RequestParam long destinationId
+    ) {
+        try {
+            return ResponseEntity.ok(routeService.getOptimalRoutes(routeId, departId, destinationId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }
