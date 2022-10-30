@@ -9,6 +9,7 @@ import ua.nure.danielost.shuttler.exception.RouteAlreadyExistsException;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.Stop;
 import ua.nure.danielost.shuttler.model.Vehicle;
+import ua.nure.danielost.shuttler.model.VehicleType;
 import ua.nure.danielost.shuttler.repository.RouteRepository;
 import ua.nure.danielost.shuttler.repository.StopRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
@@ -43,7 +44,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public List<Route> getRoutes(Route.VehicleType type) {
+    public List<Route> getRoutes(VehicleType type) {
         return routeRepository.findByType(type);
     }
 

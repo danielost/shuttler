@@ -3,7 +3,6 @@ package ua.nure.danielost.shuttler.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.nure.danielost.shuttler.exception.EmailTakenException;
 import ua.nure.danielost.shuttler.exception.NoSuchUserException;
 import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.service.UserService;
@@ -35,10 +34,10 @@ public class UserController {
         }
     }
 
-    @GetMapping("/getByEmail")
-    public ResponseEntity<User> getUserByEmail(@RequestParam String email) {
+    @GetMapping("/getByUsername")
+    public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
         try {
-            return ResponseEntity.ok(userService.getUserByEmail(email));
+            return ResponseEntity.ok(userService.getUserByUsername(username));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
@@ -49,10 +48,8 @@ public class UserController {
         try {
             userService.saveUser(user);
             return ResponseEntity.ok("User has been saved.");
-        } catch (EmailTakenException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Couldn't save the user");
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

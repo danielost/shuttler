@@ -2,7 +2,7 @@ package ua.nure.danielost.shuttler.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.nure.danielost.shuttler.exception.EmailTakenException;
+import ua.nure.danielost.shuttler.exception.UsernameTakenException;
 import ua.nure.danielost.shuttler.exception.EmptyTableException;
 import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
 import ua.nure.danielost.shuttler.exception.NoSuchUserException;
@@ -10,9 +10,6 @@ import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.repository.UserRepository;
 
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private RouteService routeService;
 
@@ -42,9 +40,9 @@ public class UserServiceImpl implements UserService {
 
         User userToUpdate = foundUser.get();
         userToUpdate.setPassword(user.getPassword());
-        userToUpdate.setEmail(user.getEmail());
-        userToUpdate.setName(user.getName());
-        userToUpdate.setSurname(user.getSurname());
+        userToUpdate.setUsername(user.getUsername());
+        userToUpdate.setFirstName(user.getFirstName());
+        userToUpdate.setFirstName(user.getLastName());
 
         userRepository.save(userToUpdate);
     }
@@ -82,23 +80,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByEmail(String email) throws NoSuchUserException {
-        User user = userRepository.findByEmail(email);
+    public User getUserByUsername(String username) throws NoSuchUserException {
+        User user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new NoSuchUserException("No users with " + email + " email in database");
+            throw new NoSuchUserException("No users with " + username + " email found");
         }
 
         return user;
     }
 
     @Override
-    public void saveUser(User user) throws EmailTakenException, NoSuchAlgorithmException {
-        if (userRepository.findByEmail(user.getEmail()) != null) {
-            throw new EmailTakenException("Email is already taken");
+    public void saveUser(User user) throws UsernameTakenException, NoSuchAlgorithmException {
+        if (userRepository.findByUsername(user.getUsername()) != null) {
+            throw new UsernameTakenException("Username is already taken");
         }
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        user.setPassword(toHexString(digest.digest(user.getPassword().getBytes(StandardCharsets.UTF_8))));
-        //FIXME Replace Message digest with BCrypt and create security configuration
+        //TODO encode with BCrypt
 
         userRepository.save(user);
     }
@@ -114,16 +110,5 @@ public class UserServiceImpl implements UserService {
 
         user.deleteRoute(route);
         userRepository.save(user);
-    }
-
-    private static String toHexString(byte[] hash)
-    {
-        BigInteger number = new BigInteger(1, hash);
-        StringBuilder hexString = new StringBuilder(number.toString(16));
-        while (hexString.length() < 64) {
-            hexString.insert(0, '0');
-        }
-
-        return hexString.toString();
     }
 }

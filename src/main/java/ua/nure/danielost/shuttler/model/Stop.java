@@ -11,8 +11,13 @@ public class Stop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
+
+    @Column(name = "street")
     private String street;
+
+    @Column(name = "number")
     private int number;
 
     @JsonIgnore

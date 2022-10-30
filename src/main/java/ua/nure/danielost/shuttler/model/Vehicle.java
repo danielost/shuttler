@@ -8,9 +8,13 @@ import javax.persistence.*;
 public class Vehicle {
 
     @Id
+    @Column(name = "vin")
     private String vin;
-//    private String type;
+
+    @Column(name = "max_capacity")
     private int max_capacity;
+
+    @Column(name = "current_capacity")
     private int current_capacity;
 
     @JsonIgnore

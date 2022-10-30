@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.Vehicle;
+import ua.nure.danielost.shuttler.model.VehicleType;
 import ua.nure.danielost.shuttler.service.RouteService;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class RouteController {
     }
 
     @GetMapping("/type")
-    public ResponseEntity<List<Route>> getRoutesOfType(@RequestParam Route.VehicleType type ) {
+    public ResponseEntity<List<Route>> getRoutesOfType(@RequestParam VehicleType type ) {
         try {
             return ResponseEntity.ok(routeService.getRoutes(type));
         } catch (Exception e) {

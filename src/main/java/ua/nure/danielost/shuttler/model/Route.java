@@ -11,8 +11,13 @@ public class Route {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
+
+    @Column(name = "number")
     private int number;
+
+    @Column(name = "type")
     private VehicleType type;
 
     @JsonIgnore
@@ -29,12 +34,6 @@ public class Route {
             inverseJoinColumns = @JoinColumn(name = "stop_id")
     )
     private Set<Stop> stops = new HashSet<>();
-
-    public enum VehicleType {
-        bus,
-        tram,
-        trolleybus
-    }
 
     public Route() {}
 

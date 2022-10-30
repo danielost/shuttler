@@ -6,5 +6,6 @@ import ua.nure.danielost.shuttler.model.Stop;
 
 @Repository
 public interface StopRepository extends JpaRepository<Stop, Long> {
+
     public Stop findByStreetAndNumber(String street, int number);
 }

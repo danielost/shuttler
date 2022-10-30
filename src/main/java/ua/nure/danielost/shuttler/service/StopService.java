@@ -9,6 +9,7 @@ import ua.nure.danielost.shuttler.model.Stop;
 import java.util.List;
 
 public interface StopService {
+
     public List<Stop> getAll();
 
     public void addStop(Stop stop) throws StopAlreadyExistsException;
