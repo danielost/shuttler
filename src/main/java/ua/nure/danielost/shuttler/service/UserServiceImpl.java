@@ -1,6 +1,7 @@
 package ua.nure.danielost.shuttler.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.exception.UsernameTakenException;
 import ua.nure.danielost.shuttler.exception.EmptyTableException;
@@ -12,6 +13,7 @@ import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.model.UserRole;
 import ua.nure.danielost.shuttler.repository.RoleRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
+import ua.nure.danielost.shuttler.security.jwt.JwtTokenProvider;
 
 import java.util.HashSet;
 import java.util.List;
@@ -105,7 +107,6 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         user.setRoles(roles);
-        //TODO encode with BCrypt
 
         return userRepository.save(user);
     }
