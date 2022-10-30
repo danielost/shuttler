@@ -11,17 +11,17 @@ import java.util.List;
 
 public interface UserService {
 
-    public List<User> getAllUsers() throws EmptyTableException;
+    public List<User> getAll() throws EmptyTableException;
 
-    public User getUserById(long id) throws NoSuchUserException;
+    public User findById(long id) throws NoSuchUserException;
 
-    public User getUserByUsername(String username) throws NoSuchUserException;
+    public User findByUsername(String username) throws NoSuchUserException;
 
-    public void saveUser(User user) throws UsernameTakenException, NoSuchAlgorithmException;
+    public User register(User user) throws UsernameTakenException, NoSuchAlgorithmException;
 
-    public void deleteUserById(long id) throws NoSuchUserException;
+    public void delete(long id) throws NoSuchUserException;
 
-    public void updateUser(long id, User user) throws NoSuchUserException;
+    public void update(long id, User user) throws NoSuchUserException;
 
     public void saveRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException;
 

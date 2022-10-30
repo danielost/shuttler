@@ -1,6 +1,8 @@
 package ua.nure.danielost.shuttler.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.danielost.shuttler.exception.NoSuchUserException;
@@ -19,7 +21,7 @@ public class UserController {
     @GetMapping("")
     public ResponseEntity<List<User>> getUsers() {
         try {
-            return ResponseEntity.ok(userService.getAllUsers());
+            return ResponseEntity.ok(userService.getAll());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
@@ -28,7 +30,7 @@ public class UserController {
     @GetMapping("/getById")
     public ResponseEntity<User> getUserById(@RequestParam long id) {
         try {
-            return ResponseEntity.ok(userService.getUserById(id));
+            return ResponseEntity.ok(userService.findById(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
@@ -37,26 +39,25 @@ public class UserController {
     @GetMapping("/getByUsername")
     public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
         try {
-            return ResponseEntity.ok(userService.getUserByUsername(username));
+            return ResponseEntity.ok(userService.findByUsername(username));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User user) {
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
         try {
-            userService.saveUser(user);
-            return ResponseEntity.ok("User has been saved.");
+            return ResponseEntity.ok(userService.register(user));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable long id) {
         try {
-            userService.deleteUserById(id);
+            userService.delete(id);
             return ResponseEntity.ok("User id" + id + " has been deleted.");
         } catch (NoSuchUserException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -68,7 +69,7 @@ public class UserController {
             @PathVariable long id, @RequestBody User user
     ) {
         try {
-            userService.updateUser(id, user);
+            userService.update(id, user);
             return ResponseEntity.ok("User id" + id + " has been updated.");
         } catch (NoSuchUserException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

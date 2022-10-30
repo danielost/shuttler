@@ -6,13 +6,17 @@ import ua.nure.danielost.shuttler.exception.UsernameTakenException;
 import ua.nure.danielost.shuttler.exception.EmptyTableException;
 import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
 import ua.nure.danielost.shuttler.exception.NoSuchUserException;
+import ua.nure.danielost.shuttler.model.Role;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.User;
+import ua.nure.danielost.shuttler.model.UserRole;
+import ua.nure.danielost.shuttler.repository.RoleRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
 
-import java.security.NoSuchAlgorithmException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,10 +25,13 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private RouteService routeService;
 
     @Override
-    public void deleteUserById(long id) throws NoSuchUserException {
+    public void delete(long id) throws NoSuchUserException {
         if (!userRepository.findById(id).isPresent()) {
             throw new NoSuchUserException("No users with " + id + " id in database");
         }
@@ -32,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(long id, User user) throws NoSuchUserException {
+    public void update(long id, User user) throws NoSuchUserException {
         Optional<User> foundUser = userRepository.findById(id);
         if (!foundUser.isPresent()) {
             throw new NoSuchUserException("No users with " + id + " id in database");
@@ -61,7 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() throws EmptyTableException {
+    public List<User> getAll() throws EmptyTableException {
         List<User> users = userRepository.findAll();
         if (users.isEmpty()) {
             throw new EmptyTableException("No users in database");
@@ -70,7 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(long id) throws NoSuchUserException {
+    public User findById(long id) throws NoSuchUserException {
         Optional<User> foundUser = userRepository.findById(id);
         if (!foundUser.isPresent()) {
             throw new NoSuchUserException("No users with " + id + " id in database");
@@ -80,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String username) throws NoSuchUserException {
+    public User findByUsername(String username) throws NoSuchUserException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new NoSuchUserException("No users with " + username + " email found");
@@ -90,13 +97,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(User user) throws UsernameTakenException, NoSuchAlgorithmException {
+    public User register(User user) throws UsernameTakenException {
         if (userRepository.findByUsername(user.getUsername()) != null) {
             throw new UsernameTakenException("Username is already taken");
         }
+        Role role = roleRepository.findByName(UserRole.USER);
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
+        user.setRoles(roles);
         //TODO encode with BCrypt
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
