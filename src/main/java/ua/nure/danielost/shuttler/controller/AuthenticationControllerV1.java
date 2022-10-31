@@ -1,6 +1,7 @@
 package ua.nure.danielost.shuttler.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/v1/auth")
 public class AuthenticationControllerV1 {
 
     @Autowired
@@ -34,7 +35,7 @@ public class AuthenticationControllerV1 {
     @Autowired
     private UserService userService;
 
-    @PostMapping("")
+    @PostMapping("/login")
     public ResponseEntity<Map<Object, Object>> login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
             String username = requestDto.getUsername();
@@ -52,6 +53,15 @@ public class AuthenticationControllerV1 {
             throw new UsernameNotFoundException("Username not found");
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username or password");
+        }
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<User> registerUser(@RequestBody User user) {
+        try {
+            return ResponseEntity.ok(userService.register(user));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 }

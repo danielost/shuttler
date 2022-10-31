@@ -5,16 +5,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ua.nure.danielost.shuttler.exception.UsernameTakenException;
-import ua.nure.danielost.shuttler.exception.EmptyTableException;
-import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
-import ua.nure.danielost.shuttler.exception.NoSuchUserException;
+import ua.nure.danielost.shuttler.exception.*;
 import ua.nure.danielost.shuttler.model.Role;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.repository.RoleRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
 
+import javax.management.relation.RoleNotFoundException;
 import java.util.*;
 
 @Service
@@ -100,13 +98,54 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByUsername(user.getUsername()) != null) {
             throw new UsernameTakenException("Username is already taken");
         }
-        Role role = roleRepository.findByName("USER");
+        Role role = roleRepository.findByName("ROLE_USER");
         List<Role> roles = new ArrayList<>();
         roles.add(role);
         user.setRoles(roles);
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public void unsetRole(long roleId, long userId) throws InvalidIdException, RoleNotFoundException {
+        Optional<Role> roleOptional = roleRepository.findById(roleId);
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (!roleOptional.isPresent() || !userOptional.isPresent()) {
+            throw new InvalidIdException("Invalid user or role ID");
+        }
+
+        User user = userOptional.get();
+        List<Role> roles = user.getRoles();
+
+        Role role = roleOptional.get();
+
+        if (!roles.contains(role)) {
+            throw new RoleNotFoundException("User doesn't have such a role");
+        }
+        roles.remove(role);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void setRole(long roleId, long userId) throws InvalidIdException {
+        Optional<Role> roleOptional = roleRepository.findById(roleId);
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (!roleOptional.isPresent() || !userOptional.isPresent()) {
+            throw new InvalidIdException("Invalid user or role ID");
+        }
+
+        User user = userOptional.get();
+        List<Role> roles = user.getRoles();
+
+        Role role = roleOptional.get();
+
+        if (!roles.contains(role)) {
+            roles.add(role);
+            userRepository.save(user);
+        }
     }
 
     @Override

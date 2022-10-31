@@ -3,12 +3,10 @@ package ua.nure.danielost.shuttler.service;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import ua.nure.danielost.shuttler.exception.UsernameTakenException;
-import ua.nure.danielost.shuttler.exception.EmptyTableException;
-import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
-import ua.nure.danielost.shuttler.exception.NoSuchUserException;
+import ua.nure.danielost.shuttler.exception.*;
 import ua.nure.danielost.shuttler.model.User;
 
+import javax.management.relation.RoleNotFoundException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -29,4 +27,8 @@ public interface UserService {
     public void saveRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException;
 
     public void deleteRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException;
+
+    public void setRole(long roleId, long userId) throws InvalidIdException;
+
+    public void unsetRole(long roleId, long userId) throws InvalidIdException, RoleNotFoundException;
 }

@@ -1,40 +1,18 @@
 package ua.nure.danielost.shuttler.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.danielost.shuttler.exception.NoSuchUserException;
 import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.service.UserService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class UserControllerV1 {
 
     @Autowired
     private UserService userService;
-
-    @GetMapping("/getById")
-    public ResponseEntity<User> getUserById(@RequestParam long id) {
-        try {
-            return ResponseEntity.ok(userService.findById(id));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
-
-    @GetMapping("/getByUsername")
-    public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
-        try {
-            return ResponseEntity.ok(userService.findByUsername(username));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable long id) {

@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/stops")
-public class StopController {
+public class StopControllerV1 {
 
     @Autowired
     private StopService stopService;
