@@ -1,7 +1,11 @@
 package ua.nure.danielost.shuttler.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -13,19 +17,20 @@ public class Role {
     private long id;
 
     @Column(name = "name")
-    private UserRole name;
+    private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users = new HashSet<>();
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    private List<User> users = new ArrayList<>();
 
     public Role() {
     }
 
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 
@@ -37,11 +42,11 @@ public class Role {
         this.id = id;
     }
 
-    public UserRole getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(UserRole name) {
+    public void setName(String name) {
         this.name = name;
     }
 }

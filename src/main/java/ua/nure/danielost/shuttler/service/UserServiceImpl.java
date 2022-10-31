@@ -1,6 +1,8 @@
 package ua.nure.danielost.shuttler.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.exception.UsernameTakenException;
@@ -10,15 +12,10 @@ import ua.nure.danielost.shuttler.exception.NoSuchUserException;
 import ua.nure.danielost.shuttler.model.Role;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.User;
-import ua.nure.danielost.shuttler.model.UserRole;
 import ua.nure.danielost.shuttler.repository.RoleRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
-import ua.nure.danielost.shuttler.security.jwt.JwtTokenProvider;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -103,10 +100,11 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByUsername(user.getUsername()) != null) {
             throw new UsernameTakenException("Username is already taken");
         }
-        Role role = roleRepository.findByName(UserRole.USER);
-        Set<Role> roles = new HashSet<>();
+        Role role = roleRepository.findByName("USER");
+        List<Role> roles = new ArrayList<>();
         roles.add(role);
         user.setRoles(roles);
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 
         return userRepository.save(user);
     }

@@ -6,5 +6,5 @@ import ua.nure.danielost.shuttler.model.UserRole;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
-    public Role findByName(UserRole name);
+    public Role findByName(String name);
 }

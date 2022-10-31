@@ -20,16 +20,17 @@ public class JwtTokenFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
+            throws IOException, ServletException {
 
+        String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
         if (token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
+            Authentication auth = jwtTokenProvider.getAuthentication(token);
 
-            if (authentication != null) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (auth != null) {
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
-        filterChain.doFilter(servletRequest, servletResponse);
+        filterChain.doFilter(req, res);
     }
 }

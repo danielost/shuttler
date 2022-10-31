@@ -23,11 +23,11 @@ public final class JwtUserFactory {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getPassword(),
-                mapToGrantedAuthorities(new HashSet<>(user.getRoles()))
+                mapToGrantedAuthorities(new ArrayList<>(user.getRoles()))
         );
     }
 
-    private static List<GrantedAuthority> mapToGrantedAuthorities(Set<Role> roles) {
+    public static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> roles) {
         return roles.stream()
                 .map(role ->
                         new SimpleGrantedAuthority(role.getName().toString()))

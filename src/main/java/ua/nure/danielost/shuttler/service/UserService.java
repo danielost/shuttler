@@ -1,5 +1,8 @@
 package ua.nure.danielost.shuttler.service;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ua.nure.danielost.shuttler.exception.UsernameTakenException;
 import ua.nure.danielost.shuttler.exception.EmptyTableException;
 import ua.nure.danielost.shuttler.exception.NoSuchRouteException;

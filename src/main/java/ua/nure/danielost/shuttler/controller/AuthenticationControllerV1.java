@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/auth/")
+@RequestMapping("/login")
 public class AuthenticationControllerV1 {
 
     @Autowired
@@ -34,7 +34,7 @@ public class AuthenticationControllerV1 {
     @Autowired
     private UserService userService;
 
-    @PostMapping("login")
+    @PostMapping("")
     public ResponseEntity<Map<Object, Object>> login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
             String username = requestDto.getUsername();

@@ -21,6 +21,7 @@ public class JwtTokenProvider {
 
     @Value("${jwt.token.secret}")
     private String secret;
+
     @Value("${jwt.token.expired}")
     private long validityInMilliseconds;
 
@@ -37,7 +38,7 @@ public class JwtTokenProvider {
         secret = Base64.getEncoder().encodeToString(secret.getBytes());
     }
 
-    public String createToken(String username, Set<Role> roles) {
+    public String createToken(String username, List<Role> roles) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", getRoleNames(roles));
 
@@ -79,11 +80,11 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    private List<String> getRoleNames(Set<Role> roles) {
+    private List<String> getRoleNames(List<Role> roles) {
         List<String> result = new ArrayList<>();
 
         roles.forEach(role ->
-                result.add(role.getName().toString())
+                result.add(role.getName())
         );
 
         return result;

@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.exception.NoSuchUserException;
 import ua.nure.danielost.shuttler.model.User;
-import ua.nure.danielost.shuttler.security.jwt.JwtUser;
 import ua.nure.danielost.shuttler.security.jwt.JwtUserFactory;
 import ua.nure.danielost.shuttler.service.UserService;
 
@@ -26,7 +25,6 @@ public class ShuttlerUserDetailsService implements UserDetailsService {
         } catch (NoSuchUserException e) {
             throw new UsernameNotFoundException("User not found");
         }
-
         return JwtUserFactory.create(user);
     }
 }
