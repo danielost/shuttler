@@ -18,15 +18,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("")
-    public ResponseEntity<List<User>> getUsers() {
-        try {
-            return ResponseEntity.ok(userService.getAll());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
-
     @GetMapping("/getById")
     public ResponseEntity<User> getUserById(@RequestParam long id) {
         try {
@@ -42,15 +33,6 @@ public class UserController {
             return ResponseEntity.ok(userService.findByUsername(username));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
-        }
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        try {
-            return ResponseEntity.ok(userService.register(user));
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
