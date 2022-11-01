@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.danielost.shuttler.model.User;
+import ua.nure.danielost.shuttler.service.RouteService;
 import ua.nure.danielost.shuttler.service.UserService;
 
 import java.util.List;
@@ -16,10 +17,22 @@ public class AdminControllerV1 {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RouteService routeService;
+
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers() {
         try {
             return ResponseEntity.ok(userService.getAll());
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("/organizers")
+    public ResponseEntity<List<User>> getOrganizers() {
+        try {
+            return ResponseEntity.ok(userService.getAllOrganizers());
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -68,4 +81,8 @@ public class AdminControllerV1 {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // TODO Delete users
+    // TODO Delete routes
+    // TODO Delete vehicles
 }

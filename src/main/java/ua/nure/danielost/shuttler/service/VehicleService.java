@@ -1,9 +1,6 @@
 package ua.nure.danielost.shuttler.service;
 
-import ua.nure.danielost.shuttler.exception.EmptyTableException;
-import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
-import ua.nure.danielost.shuttler.exception.NoSuchUserException;
-import ua.nure.danielost.shuttler.exception.NoSuchVehicleException;
+import ua.nure.danielost.shuttler.exception.*;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.Vehicle;
 
@@ -11,7 +8,7 @@ import java.util.List;
 
 public interface VehicleService {
 
-    public Vehicle addVehicle(Vehicle vehicle, long id) throws NoSuchUserException, NoSuchRouteException;
+    public Vehicle addVehicle(Vehicle vehicle, long routeId, long userId) throws NoSuchUserException, NoSuchRouteException, InvalidIdException;
 
     public List<Vehicle> getAll() throws EmptyTableException;
 

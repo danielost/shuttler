@@ -1,8 +1,6 @@
 package ua.nure.danielost.shuttler.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.exception.*;
@@ -126,6 +124,20 @@ public class UserServiceImpl implements UserService {
         }
         roles.remove(role);
         userRepository.save(user);
+    }
+
+    @Override
+    public List<User> getAllOrganizers() {
+        List<User> users = userRepository.findAll();
+        List<User> result = new ArrayList<>();
+        Role role = roleRepository.findByName("ROLE_ORGANIZER");
+
+        for (User user: users) {
+            if (user.getRoles().contains(role)) {
+                result.add(user);
+            }
+        }
+        return result;
     }
 
     @Override

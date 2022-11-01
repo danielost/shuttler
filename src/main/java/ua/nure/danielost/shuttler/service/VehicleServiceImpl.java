@@ -3,11 +3,14 @@ package ua.nure.danielost.shuttler.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.exception.EmptyTableException;
+import ua.nure.danielost.shuttler.exception.InvalidIdException;
 import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
 import ua.nure.danielost.shuttler.exception.NoSuchVehicleException;
 import ua.nure.danielost.shuttler.model.Route;
+import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.model.Vehicle;
 import ua.nure.danielost.shuttler.repository.RouteRepository;
+import ua.nure.danielost.shuttler.repository.UserRepository;
 import ua.nure.danielost.shuttler.repository.VehicleRepository;
 
 import java.util.List;
@@ -21,6 +24,9 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Autowired
     private VehicleRepository vehicleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Vehicle getByVin(String vin) throws NoSuchVehicleException {
@@ -94,18 +100,19 @@ public class VehicleServiceImpl implements VehicleService {
         vehicleToUpdate.setRoute(routeOptional.get());
         vehicleToUpdate.setCurrent_capacity(vehicle.getCurrent_capacity());
         vehicleToUpdate.setMax_capacity(vehicle.getMax_capacity());
-//        vehicleToUpdate.setType(vehicle.getType());
 
         vehicleRepository.save(vehicleToUpdate);
     }
 
     @Override
-    public Vehicle addVehicle(Vehicle vehicle, long id) throws NoSuchRouteException {
-        Optional<Route> routeOptional = routeRepository.findById(id);
-        if (!routeOptional.isPresent()) {
-            throw new NoSuchRouteException("No routes with " + id + " id in database");
+    public Vehicle addVehicle(Vehicle vehicle, long routeId, long userId) throws InvalidIdException {
+        Optional<Route> routeOptional = routeRepository.findById(routeId);
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!routeOptional.isPresent() || !userOptional.isPresent()) {
+            throw new InvalidIdException("Invalid user or route ID");
         }
         vehicle.setRoute(routeOptional.get());
+        vehicle.setCreator(userOptional.get());
         return vehicleRepository.save(vehicle);
     }
 

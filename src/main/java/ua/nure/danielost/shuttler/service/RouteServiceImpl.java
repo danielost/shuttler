@@ -2,14 +2,8 @@ package ua.nure.danielost.shuttler.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ua.nure.danielost.shuttler.exception.EmptyTableException;
-import ua.nure.danielost.shuttler.exception.InvalidIdException;
-import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
-import ua.nure.danielost.shuttler.exception.RouteAlreadyExistsException;
-import ua.nure.danielost.shuttler.model.Route;
-import ua.nure.danielost.shuttler.model.Stop;
-import ua.nure.danielost.shuttler.model.Vehicle;
-import ua.nure.danielost.shuttler.model.VehicleType;
+import ua.nure.danielost.shuttler.exception.*;
+import ua.nure.danielost.shuttler.model.*;
 import ua.nure.danielost.shuttler.repository.RouteRepository;
 import ua.nure.danielost.shuttler.repository.StopRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
@@ -49,10 +43,18 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public void saveRoute(Route route) throws RouteAlreadyExistsException {
+    public void saveRoute(Route route, long id) throws RouteAlreadyExistsException, NoSuchUserException {
         if (routeRepository.findByNumber(route.getNumber()) != null) {
             throw new RouteAlreadyExistsException("Route with number " + route.getNumber() + " already exists");
         }
+
+        Optional<User> userOptional = userRepository.findById(id);
+        if (!userOptional.isPresent()) {
+            throw new NoSuchUserException("User doesn't exist");
+        }
+
+        route.setCreator(userOptional.get());
+
         routeRepository.save(route);
     }
 

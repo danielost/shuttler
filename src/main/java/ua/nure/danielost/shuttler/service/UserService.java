@@ -1,8 +1,5 @@
 package ua.nure.danielost.shuttler.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import ua.nure.danielost.shuttler.exception.*;
 import ua.nure.danielost.shuttler.model.User;
 
@@ -31,4 +28,6 @@ public interface UserService {
     public void setRole(long roleId, long userId) throws InvalidIdException;
 
     public void unsetRole(long roleId, long userId) throws InvalidIdException, RoleNotFoundException;
+
+    public List<User> getAllOrganizers();
 }

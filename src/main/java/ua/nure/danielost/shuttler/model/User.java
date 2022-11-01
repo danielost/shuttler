@@ -42,7 +42,29 @@ public class User {
     )
     private List<Role> roles = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "creator")
+    private Set<Route> createdRoutes = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "creator")
+    private Set<Vehicle> ownedVehicles = new HashSet<>();
+
     public User() {}
+
+    public Set<Vehicle> getOwnedVehicles() {
+        return ownedVehicles;
+    }
+
+    public void setOwnedVehicles(Set<Vehicle> ownedVehicles) {
+        this.ownedVehicles = ownedVehicles;
+    }
+
+    public Set<Route> getCreatedRoutes() {
+        return createdRoutes;
+    }
+
+    public void setCreatedRoutes(Set<Route> createdRoutes) {
+        this.createdRoutes = createdRoutes;
+    }
 
     public List<Role> getRoles() {
         return roles;

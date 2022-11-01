@@ -35,7 +35,20 @@ public class Route {
     )
     private Set<Stop> stops = new HashSet<>();
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User creator;
+
     public Route() {}
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
 
     public VehicleType getType() {
         return type;

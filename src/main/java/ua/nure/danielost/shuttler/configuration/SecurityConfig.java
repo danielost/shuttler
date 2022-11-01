@@ -16,7 +16,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final String ADMIN_ENDPOINT = "/api/v1/admin/**";
-    // TODO add user_id field to the Vehicle table
     private static final String ORGANIZER_ENDPOINT = "/api/v1/organizer/**";
     private static final String LOGIN_ENDPOINT = "/api/v1/auth/**";
 

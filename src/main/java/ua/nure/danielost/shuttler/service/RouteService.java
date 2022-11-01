@@ -1,9 +1,6 @@
 package ua.nure.danielost.shuttler.service;
 
-import ua.nure.danielost.shuttler.exception.EmptyTableException;
-import ua.nure.danielost.shuttler.exception.InvalidIdException;
-import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
-import ua.nure.danielost.shuttler.exception.RouteAlreadyExistsException;
+import ua.nure.danielost.shuttler.exception.*;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.Vehicle;
 import ua.nure.danielost.shuttler.model.VehicleType;
@@ -15,7 +12,7 @@ public interface RouteService {
 
     public void updateRouteNumber(long id, Route route) throws NoSuchRouteException;
 
-    public void saveRoute(Route route) throws RouteAlreadyExistsException;
+    public void saveRoute(Route route, long id) throws RouteAlreadyExistsException, NoSuchUserException;
 
     public Route getRouteById(long id) throws NoSuchRouteException;
 

@@ -72,38 +72,6 @@ public class RouteControllerV1 {
         }
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<String> addRoute(@RequestBody Route route) {
-        try {
-            routeService.saveRoute(route);
-            return ResponseEntity.ok("Route saved");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteRouteById(@PathVariable long id) {
-        try {
-            routeService.deleteRoute(id);
-            return ResponseEntity.ok("Route deleted");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error");
-        }
-    }
-
-    @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateRouteById(
-            @PathVariable long id, @RequestBody Route route
-    ) {
-        try {
-            routeService.updateRouteNumber(id, route);
-            return ResponseEntity.ok("Route updated");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error");
-        }
-    }
-
     @GetMapping("/getOptimal/{routeId}")
     public ResponseEntity<List<Route>> getOptimalRoutes(
             @PathVariable long routeId,

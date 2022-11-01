@@ -16,17 +16,6 @@ public class VehicleControllerV1 {
     @Autowired
     private VehicleService vehicleService;
 
-    @PostMapping("/add/{id}")
-    public ResponseEntity<Vehicle> addVehicle(
-            @RequestBody Vehicle vehicle, @PathVariable long id
-    ) {
-        try {
-            return ResponseEntity.ok(vehicleService.addVehicle(vehicle, id));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
-
     @GetMapping("")
     public ResponseEntity<List<Vehicle>> getAllVehicles() {
         try {
@@ -54,20 +43,7 @@ public class VehicleControllerV1 {
         }
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<String> updateVehicle(
-            @RequestBody Vehicle vehicle,
-            @RequestParam String vin,
-            @RequestParam long route_id
-    ) {
-        try {
-            vehicleService.updateVehicle(vehicle, vin, route_id);
-            return ResponseEntity.ok("Vehicle updated");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
+    // TODO Create new role - IoT
     @PutMapping("/increasePassQuantity")
     public ResponseEntity<String> increasePassengerQuantity(@RequestParam String vin) {
         try {
@@ -78,21 +54,12 @@ public class VehicleControllerV1 {
         }
     }
 
+    // TODO Create new role - IoT
     @PutMapping("/decreasePassQuantity")
     public ResponseEntity<String> decreasePassengerQuantity(@RequestParam String vin) {
         try {
             vehicleService.decreaseAmountOfPassengers(vin);
             return ResponseEntity.ok("Amount decreased");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @DeleteMapping("delete/{vin}")
-    public ResponseEntity<String> deleteVehicle(@PathVariable String vin) {
-        try {
-            vehicleService.deleteVehicle(vin);
-            return ResponseEntity.ok("Vehicle has been deleted");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

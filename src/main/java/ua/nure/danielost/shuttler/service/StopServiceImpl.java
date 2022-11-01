@@ -11,7 +11,6 @@ import ua.nure.danielost.shuttler.model.Stop;
 import ua.nure.danielost.shuttler.repository.RouteRepository;
 import ua.nure.danielost.shuttler.repository.StopRepository;
 
-import java.sql.RowId;
 import java.util.List;
 import java.util.Optional;
 

@@ -22,7 +22,20 @@ public class Vehicle {
     @JoinColumn(name = "route_id")
     private Route route;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User creator;
+
     public Vehicle() {
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 
     public String getVin() {
@@ -32,14 +45,6 @@ public class Vehicle {
     public void setVin(String vin) {
         this.vin = vin;
     }
-
-//    public String getType() {
-//        return type;
-//    }
-//
-//    public void setType(String type) {
-//        this.type = type;
-//    }
 
     public int getMax_capacity() {
         return max_capacity;
