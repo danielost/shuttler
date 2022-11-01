@@ -1,6 +1,7 @@
 package ua.nure.danielost.shuttler.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.danielost.shuttler.model.Route;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/routes")
+@RequestMapping("/api/v1/routes")
 public class RouteControllerV1 {
 
     @Autowired
@@ -23,7 +24,7 @@ public class RouteControllerV1 {
         try {
             return ResponseEntity.ok(routeService.getAllRoutes());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -32,7 +33,7 @@ public class RouteControllerV1 {
         try {
             return ResponseEntity.ok(routeService.getRouteById(id));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -41,7 +42,7 @@ public class RouteControllerV1 {
         try {
             return ResponseEntity.ok(routeService.getRouteByNumber(number));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -50,7 +51,16 @@ public class RouteControllerV1 {
         try {
             return ResponseEntity.ok(routeService.getVehicles(id));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("/findRoutesByStops/{stopA}/{stopB}")
+    public ResponseEntity<List<Route>> getRoutesByStops(@PathVariable long stopA, @PathVariable long stopB) {
+        try {
+            return ResponseEntity.ok(routeService.findByStops(stopA, stopB));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -59,7 +69,7 @@ public class RouteControllerV1 {
         try {
             return ResponseEntity.ok(routeService.getRoutes(type));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -68,7 +78,7 @@ public class RouteControllerV1 {
         try {
             return ResponseEntity.ok(routeService.getCongestion(id));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -81,7 +91,7 @@ public class RouteControllerV1 {
         try {
             return ResponseEntity.ok(routeService.getOptimalRoutes(routeId, departId, destinationId));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 }

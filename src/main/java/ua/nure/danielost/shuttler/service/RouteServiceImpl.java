@@ -25,6 +25,30 @@ public class RouteServiceImpl implements RouteService {
     @Autowired
     private StopRepository stopRepository;
 
+    @Override
+    public List<Route> findByStops(long stopA, long stopB) throws NoSuchStopException {
+        List<Route> routes = routeRepository.findAll();
+        List<Route> result = new ArrayList<>();
+        Optional<Stop> stopAOptional = stopRepository.findById(stopA);
+        Optional<Stop> stopBOptional = stopRepository.findById(stopB);
+
+        if (!stopAOptional.isPresent() || !stopBOptional.isPresent()) {
+            throw new NoSuchStopException("Invalid stop id");
+        }
+        Stop stopAEntity = stopAOptional.get();
+        Stop stopBEntity = stopBOptional.get();
+
+        for (Route route: routes) {
+            Set<Stop> stops = route.getStops();
+            if (stops.contains(stopAEntity) && stops.contains(stopBEntity)) {
+                result.add(route);
+            }
+        }
+
+        return result;
+    }
+
+    @Override
     public void updateRouteNumber(long id, Route route) throws NoSuchRouteException {
         Optional<Route> foundRoute = routeRepository.findById(id);
         if (!foundRoute.isPresent()) {
