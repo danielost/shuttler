@@ -19,7 +19,11 @@ public class IotControllerV1 {
     public ResponseEntity<String> increasePassengerQuantity(@RequestParam String vin) {
         try {
             vehicleService.increaseAmountOfPassengers(vin);
-            return ResponseEntity.ok("Amount increased");
+            int passengers = vehicleService.getByVin(vin).getCurrent_capacity();
+            return ResponseEntity.ok(
+                    "Amount of passengers of vehicle {vin: " + vin + "} incremented by 1:"
+                            + (passengers - 1) + " -> " + passengers
+            );
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -29,7 +33,11 @@ public class IotControllerV1 {
     public ResponseEntity<String> decreasePassengerQuantity(@RequestParam String vin) {
         try {
             vehicleService.decreaseAmountOfPassengers(vin);
-            return ResponseEntity.ok("Amount decreased");
+            int passengers = vehicleService.getByVin(vin).getCurrent_capacity();
+            return ResponseEntity.ok(
+                    "Amount of passengers of vehicle {vin: " + vin + "} decremented by 1:"
+                            + (passengers + 1) + " -> " + passengers
+            );
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

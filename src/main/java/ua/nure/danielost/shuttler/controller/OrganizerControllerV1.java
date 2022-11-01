@@ -6,9 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.Vehicle;
-import ua.nure.danielost.shuttler.repository.RouteRepository;
-import ua.nure.danielost.shuttler.repository.VehicleRepository;
 import ua.nure.danielost.shuttler.service.RouteService;
+import ua.nure.danielost.shuttler.service.StopService;
 import ua.nure.danielost.shuttler.service.VehicleService;
 
 @RestController
@@ -20,6 +19,9 @@ public class OrganizerControllerV1 {
 
     @Autowired
     private VehicleService vehicleService;
+
+    @Autowired
+    private StopService stopService;
 
     @PostMapping("/createRoute")
     public ResponseEntity<String> addRoute(
@@ -46,7 +48,8 @@ public class OrganizerControllerV1 {
 
     @PutMapping("/updateRoute/{id}")
     public ResponseEntity<String> updateRouteById(
-            @PathVariable long id, @RequestBody Route route
+            @PathVariable long id,
+            @RequestBody Route route
     ) {
         try {
             routeService.updateRouteNumber(id, route);
@@ -88,6 +91,32 @@ public class OrganizerControllerV1 {
         try {
             vehicleService.deleteVehicle(vin);
             return ResponseEntity.ok("Vehicle has been deleted");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/saveStop/{stopId}/toRoute/{routeId}")
+    public ResponseEntity<String> saveStopToRoute(
+            @PathVariable long stopId,
+            @PathVariable long routeId
+    ) {
+        try {
+            stopService.saveStopToRoute(stopId, routeId);
+            return ResponseEntity.ok("Stop {id " + stopId + "} saved to route {id " + routeId + "}");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/removeStop/{stopId}/fromRoute/{routeId}")
+    public ResponseEntity<String> removeStopFromRoute(
+            @PathVariable long stopId,
+            @PathVariable long routeId
+    ) {
+        try {
+            stopService.removeStopFromRoute(stopId, routeId);
+            return ResponseEntity.ok("Stop has been removed from the route");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

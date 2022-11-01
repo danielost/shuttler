@@ -29,5 +29,5 @@ public interface UserService {
 
     public void unsetRole(long roleId, long userId) throws InvalidIdException, RoleNotFoundException;
 
-    public List<User> getAllOrganizers();
+    public List<User> getAllUsersByType(String type);
 }

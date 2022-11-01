@@ -1,6 +1,7 @@
 package ua.nure.danielost.shuttler.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.danielost.shuttler.model.Route;
@@ -10,7 +11,7 @@ import ua.nure.danielost.shuttler.service.VehicleService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/vehicles")
+@RequestMapping("/api/v1/vehicles")
 public class VehicleControllerV1 {
 
     @Autowired
@@ -21,7 +22,7 @@ public class VehicleControllerV1 {
         try {
             return ResponseEntity.ok(vehicleService.getAll());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -30,7 +31,7 @@ public class VehicleControllerV1 {
         try {
             return ResponseEntity.ok(vehicleService.getByVin(vin));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
@@ -39,7 +40,7 @@ public class VehicleControllerV1 {
         try {
             return ResponseEntity.ok(vehicleService.getRoute(vin));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 }

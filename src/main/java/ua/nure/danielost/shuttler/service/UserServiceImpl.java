@@ -127,10 +127,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllOrganizers() {
+    public List<User> getAllUsersByType(String type) {
         List<User> users = userRepository.findAll();
         List<User> result = new ArrayList<>();
-        Role role = roleRepository.findByName("ROLE_ORGANIZER");
+        Role role = roleRepository.findByName(type);
 
         for (User user: users) {
             if (user.getRoles().contains(role)) {

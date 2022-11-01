@@ -56,7 +56,9 @@ public class RouteControllerV1 {
     }
 
     @GetMapping("/findRoutesByStops/{stopA}/{stopB}")
-    public ResponseEntity<List<Route>> getRoutesByStops(@PathVariable long stopA, @PathVariable long stopB) {
+    public ResponseEntity<List<Route>> getRoutesByStops(
+            @PathVariable long stopA,
+            @PathVariable long stopB) {
         try {
             return ResponseEntity.ok(routeService.findByStops(stopA, stopB));
         } catch (Exception e) {

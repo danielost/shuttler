@@ -8,7 +8,7 @@ import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.service.UserService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class UserControllerV1 {
 
     @Autowired
