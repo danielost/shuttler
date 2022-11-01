@@ -10,25 +10,25 @@ import java.util.Set;
 
 public interface RouteService {
 
-    public void updateRouteNumber(long id, Route route) throws NoSuchRouteException;
+    void updateRouteNumber(long id, Route route) throws NoSuchRouteException, InvalidIdException;
 
-    public void saveRoute(Route route, long id) throws RouteAlreadyExistsException, NoSuchUserException;
+    void saveRoute(Route route, long id) throws RouteAlreadyExistsException, NoSuchUserException, InvalidIdException;
 
-    public Route getRouteById(long id) throws NoSuchRouteException;
+    Route getRouteById(long id) throws NoSuchRouteException;
 
-    public void deleteRoute(long id) throws NoSuchRouteException;
+    void deleteRoute(long id) throws NoSuchRouteException, InvalidIdException;
 
-    public List<Route> getAllRoutes() throws EmptyTableException;
+    List<Route> getAllRoutes() throws EmptyTableException;
 
-    public Route getRouteByNumber(int number) throws NoSuchRouteException;
+    Route getRouteByNumber(int number) throws NoSuchRouteException;
 
-    public Set<Vehicle> getVehicles(long id) throws NoSuchRouteException;
+    Set<Vehicle> getVehicles(long id) throws NoSuchRouteException;
 
-    public double getCongestion(long id) throws NoSuchRouteException;
+    double getCongestion(long id) throws NoSuchRouteException;
 
-    public List<Route> getRoutes(VehicleType type);
+    List<Route> getRoutes(VehicleType type);
 
-    public List<Route> getOptimalRoutes(long routeId, long departId, long destinationId) throws NoSuchRouteException, InvalidIdException;
+    List<Route> getOptimalRoutes(long routeId, long departId, long destinationId) throws NoSuchRouteException, InvalidIdException;
 
-    public List<Route> findByStops(long stopA, long stopB) throws NoSuchStopException;
+    List<Route> findByStops(long stopA, long stopB) throws NoSuchStopException;
 }

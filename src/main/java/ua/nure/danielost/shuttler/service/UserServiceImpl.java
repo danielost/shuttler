@@ -3,12 +3,13 @@ package ua.nure.danielost.shuttler.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import ua.nure.danielost.shuttler.configuration.SecurityConfig;
 import ua.nure.danielost.shuttler.exception.*;
 import ua.nure.danielost.shuttler.model.Role;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.User;
-import ua.nure.danielost.shuttler.repository.RoleRepository;
-import ua.nure.danielost.shuttler.repository.UserRepository;
+import ua.nure.danielost.shuttler.security.jwt.repository.RoleRepository;
+import ua.nure.danielost.shuttler.security.jwt.repository.UserRepository;
 
 import javax.management.relation.RoleNotFoundException;
 import java.util.*;
@@ -26,36 +27,75 @@ public class UserServiceImpl implements UserService {
     private RouteService routeService;
 
     @Override
-    public void delete(long id) throws NoSuchUserException {
-        if (!userRepository.findById(id).isPresent()) {
+    public void delete(long id) throws NoSuchUserException, InvalidIdException {
+        Optional<User> userOptional = userRepository.findById(id);
+
+        if (!userOptional.isPresent()) {
             throw new NoSuchUserException("No users with " + id + " id in database");
         }
+
+        String username = SecurityConfig.getUsernameByContext();
+        if (!username.equals(userOptional.get().getUsername())) {
+            throw new InvalidIdException("You can't delete other users");
+        }
+
         userRepository.deleteById(id);
     }
 
     @Override
-    public void update(long id, User user) throws NoSuchUserException {
-        Optional<User> foundUser = userRepository.findById(id);
-        if (!foundUser.isPresent()) {
+    public void update(
+            long id,
+            User user
+    ) throws NoSuchUserException, InvalidIdException {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (!userOptional.isPresent()) {
             throw new NoSuchUserException("No users with " + id + " id in database");
         }
 
-        User userToUpdate = foundUser.get();
-        userToUpdate.setPassword(user.getPassword());
-        userToUpdate.setUsername(user.getUsername());
+        User userToUpdate = userOptional.get();
+        String username = SecurityConfig.getUsernameByContext();
+
+        if (!userToUpdate.getUsername().equals(username)) {
+            throw new InvalidIdException("You are allowed to update only your personal info");
+        }
+
+        userToUpdate.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userToUpdate.setFirstName(user.getFirstName());
-        userToUpdate.setFirstName(user.getLastName());
+        userToUpdate.setLastName(user.getLastName());
 
         userRepository.save(userToUpdate);
     }
 
     @Override
-    public void saveRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException {
+    public Set<Route> getSavedRoutes(long id) throws InvalidIdException, NoSuchUserException {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (!userOptional.isPresent()) {
+            throw new NoSuchUserException("No users with " + id + " id in database");
+        }
+        User user = userOptional.get();
+        String username = SecurityConfig.getUsernameByContext();
+        if (!user.getUsername().equals(username)) {
+            throw new InvalidIdException("You are allowed to see only your saved routes");
+        }
+
+        return user.getSavedRoutes();
+    }
+
+    @Override
+    public void saveRoute(
+            long userId,
+            long routeId
+    ) throws NoSuchRouteException, NoSuchUserException, InvalidIdException {
         Optional<User> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
             throw new NoSuchUserException("No users with " + userId + " id in database");
         }
         User user = userOptional.get();
+        String username = SecurityConfig.getUsernameByContext();
+        if (!user.getUsername().equals(username)) {
+            throw new InvalidIdException("You are allowed to save routes only to your account");
+        }
+
         Route route = routeService.getRouteById(routeId);
 
         user.saveRoute(route);
@@ -106,7 +146,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void unsetRole(long roleId, long userId) throws InvalidIdException, RoleNotFoundException {
+    public void unsetRole(
+            long roleId,
+            long userId
+    ) throws InvalidIdException, RoleNotFoundException {
         Optional<Role> roleOptional = roleRepository.findById(roleId);
         Optional<User> userOptional = userRepository.findById(userId);
 
@@ -141,7 +184,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setRole(long roleId, long userId) throws InvalidIdException {
+    public void setRole(
+            long roleId,
+            long userId
+    ) throws InvalidIdException {
         Optional<Role> roleOptional = roleRepository.findById(roleId);
         Optional<User> userOptional = userRepository.findById(userId);
 
@@ -161,12 +207,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException {
+    public void deleteRoute(
+            long userId,
+            long routeId
+    ) throws NoSuchRouteException, NoSuchUserException, InvalidIdException {
         Optional<User> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
             throw new NoSuchUserException("No users with " + userId + " id in database");
         }
         User user = userOptional.get();
+        String username = SecurityConfig.getUsernameByContext();
+        if (!user.getUsername().equals(username)) {
+            throw new InvalidIdException("You are allowed to remove routes only from your account");
+        }
         Route route = routeService.getRouteById(routeId);
 
         user.deleteRoute(route);

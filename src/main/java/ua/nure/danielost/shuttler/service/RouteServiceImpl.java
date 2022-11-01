@@ -2,11 +2,12 @@ package ua.nure.danielost.shuttler.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.nure.danielost.shuttler.configuration.SecurityConfig;
 import ua.nure.danielost.shuttler.exception.*;
 import ua.nure.danielost.shuttler.model.*;
-import ua.nure.danielost.shuttler.repository.RouteRepository;
-import ua.nure.danielost.shuttler.repository.StopRepository;
-import ua.nure.danielost.shuttler.repository.UserRepository;
+import ua.nure.danielost.shuttler.security.jwt.repository.RouteRepository;
+import ua.nure.danielost.shuttler.security.jwt.repository.StopRepository;
+import ua.nure.danielost.shuttler.security.jwt.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,10 @@ public class RouteServiceImpl implements RouteService {
     private StopRepository stopRepository;
 
     @Override
-    public List<Route> findByStops(long stopA, long stopB) throws NoSuchStopException {
+    public List<Route> findByStops(
+            long stopA,
+            long stopB
+    ) throws NoSuchStopException {
         List<Route> routes = routeRepository.findAll();
         List<Route> result = new ArrayList<>();
         Optional<Stop> stopAOptional = stopRepository.findById(stopA);
@@ -49,13 +53,22 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public void updateRouteNumber(long id, Route route) throws NoSuchRouteException {
+    public void updateRouteNumber(
+            long id,
+            Route route
+    ) throws NoSuchRouteException, InvalidIdException {
         Optional<Route> foundRoute = routeRepository.findById(id);
         if (!foundRoute.isPresent()) {
             throw new NoSuchRouteException("No routes with " + id + " id in database");
         }
 
         Route routeToUpdate = foundRoute.get();
+
+        String username = SecurityConfig.getUsernameByContext();
+        if (!routeToUpdate.getCreator().getUsername().equals(username)) {
+            throw new InvalidIdException("You can modify only your own routes");
+        }
+
         routeToUpdate.setNumber(route.getNumber());
 
         routeRepository.save(routeToUpdate);
@@ -67,7 +80,10 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public void saveRoute(Route route, long id) throws RouteAlreadyExistsException, NoSuchUserException {
+    public void saveRoute(
+            Route route,
+            long id
+    ) throws RouteAlreadyExistsException, NoSuchUserException, InvalidIdException {
         if (routeRepository.findByNumber(route.getNumber()) != null) {
             throw new RouteAlreadyExistsException("Route with number " + route.getNumber() + " already exists");
         }
@@ -75,6 +91,12 @@ public class RouteServiceImpl implements RouteService {
         Optional<User> userOptional = userRepository.findById(id);
         if (!userOptional.isPresent()) {
             throw new NoSuchUserException("User doesn't exist");
+        }
+
+        String username = SecurityConfig.getUsernameByContext();
+        User user = userOptional.get();
+        if (!user.getUsername().equals(username)) {
+            throw new InvalidIdException("Only you can be the owner of a route created by you");
         }
 
         route.setCreator(userOptional.get());
@@ -130,18 +152,28 @@ public class RouteServiceImpl implements RouteService {
         return optimalRoutes;
     }
 
-    private boolean routeContainsStops(Route route, Stop stopA, Stop stopB) {
+    private boolean routeContainsStops(
+            Route route,
+            Stop stopA,
+            Stop stopB
+    ) {
         Set<Stop> stops = route.getStops();
         return stops.contains(stopA) && stops.contains(stopB);
     }
 
     @Override
-    public void deleteRoute(long id) throws NoSuchRouteException {
+    public void deleteRoute(long id) throws NoSuchRouteException, InvalidIdException {
         Optional<Route> foundRoute = routeRepository.findById(id);
         if (!foundRoute.isPresent()) {
             throw new NoSuchRouteException("No routes with " + id + " id in database");
         }
+        String username = SecurityConfig.getUsernameByContext();
         Route route = foundRoute.get();
+
+        if (!route.getCreator().getUsername().equals(username)) {
+            throw new InvalidIdException("You can delete only your own routes");
+        }
+
         route.getUsers().forEach(user -> user.getSavedRoutes().remove(route));
         userRepository.saveAll(route.getUsers());
         routeRepository.deleteById(id);

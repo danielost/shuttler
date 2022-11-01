@@ -10,17 +10,17 @@ import java.util.List;
 
 public interface StopService {
 
-    public List<Stop> getAll();
+    List<Stop> getAll();
 
-    public void addStop(Stop stop) throws StopAlreadyExistsException;
+    void addStop(Stop stop) throws StopAlreadyExistsException;
 
-    public void updateStop(Stop stop, long id) throws NoSuchStopException;
+    void updateStop(Stop stop, long id) throws NoSuchStopException;
 
-    public void addStop(Stop stop, long routeId) throws StopAlreadyExistsException, NoSuchRouteException;
+    void addStop(Stop stop, long routeId) throws StopAlreadyExistsException, NoSuchRouteException;
 
-    public void saveStopToRoute(long stopId, long routeId) throws InvalidIdException, StopAlreadyExistsException;
+    void saveStopToRoute(long stopId, long routeId) throws InvalidIdException, StopAlreadyExistsException;
 
-    public void deleteStop(long id) throws NoSuchStopException;
+    void deleteStop(long id) throws NoSuchStopException;
 
-    public void removeStopFromRoute(long stopId, long routeId) throws InvalidIdException, NoSuchStopException;
+    void removeStopFromRoute(long stopId, long routeId) throws InvalidIdException, NoSuchStopException;
 }

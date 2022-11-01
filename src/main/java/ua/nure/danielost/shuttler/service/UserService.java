@@ -1,33 +1,37 @@
 package ua.nure.danielost.shuttler.service;
 
 import ua.nure.danielost.shuttler.exception.*;
+import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.User;
 
 import javax.management.relation.RoleNotFoundException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
 
-    public List<User> getAll() throws EmptyTableException;
+    List<User> getAll() throws EmptyTableException;
 
-    public User findById(long id) throws NoSuchUserException;
+    User findById(long id) throws NoSuchUserException;
 
-    public User findByUsername(String username) throws NoSuchUserException;
+    User findByUsername(String username) throws NoSuchUserException;
 
-    public User register(User user) throws UsernameTakenException, NoSuchAlgorithmException;
+    User register(User user) throws UsernameTakenException, NoSuchAlgorithmException;
 
-    public void delete(long id) throws NoSuchUserException;
+    void delete(long id) throws NoSuchUserException, InvalidIdException;
 
-    public void update(long id, User user) throws NoSuchUserException;
+    void update(long id, User user) throws NoSuchUserException, InvalidIdException;
 
-    public void saveRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException;
+    void saveRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException, InvalidIdException;
 
-    public void deleteRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException;
+    void deleteRoute(long userId, long routeId) throws NoSuchRouteException, NoSuchUserException, InvalidIdException;
 
-    public void setRole(long roleId, long userId) throws InvalidIdException;
+    void setRole(long roleId, long userId) throws InvalidIdException;
 
-    public void unsetRole(long roleId, long userId) throws InvalidIdException, RoleNotFoundException;
+    void unsetRole(long roleId, long userId) throws InvalidIdException, RoleNotFoundException;
 
-    public List<User> getAllUsersByType(String type);
+    List<User> getAllUsersByType(String type);
+
+    Set<Route> getSavedRoutes(long id) throws InvalidIdException, NoSuchUserException;
 }

@@ -2,14 +2,15 @@ package ua.nure.danielost.shuttler.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ua.nure.danielost.shuttler.configuration.SecurityConfig;
 import ua.nure.danielost.shuttler.exception.InvalidIdException;
 import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
 import ua.nure.danielost.shuttler.exception.NoSuchStopException;
 import ua.nure.danielost.shuttler.exception.StopAlreadyExistsException;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.Stop;
-import ua.nure.danielost.shuttler.repository.RouteRepository;
-import ua.nure.danielost.shuttler.repository.StopRepository;
+import ua.nure.danielost.shuttler.security.jwt.repository.RouteRepository;
+import ua.nure.danielost.shuttler.security.jwt.repository.StopRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +39,10 @@ public class StopServiceImpl implements StopService {
     }
 
     @Override
-    public void removeStopFromRoute(long stopId, long routeId) throws InvalidIdException, NoSuchStopException {
+    public void removeStopFromRoute(
+            long stopId,
+            long routeId
+    ) throws InvalidIdException, NoSuchStopException {
         Optional<Stop> stopOptional = stopRepository.findById(stopId);
         Optional<Route> routeOptional = routeRepository.findById(routeId);
 
@@ -48,6 +52,10 @@ public class StopServiceImpl implements StopService {
 
         Stop stop = stopOptional.get();
         Route route = routeOptional.get();
+        String username = SecurityConfig.getUsernameByContext();
+        if (!route.getCreator().getUsername().equals(username)) {
+            throw new InvalidIdException("You can remove stops only from your routes");
+        }
 
         if (!route.getStops().contains(stop)) {
             throw new NoSuchStopException("Route doesn't contain such stop");
@@ -72,7 +80,10 @@ public class StopServiceImpl implements StopService {
     }
 
     @Override
-    public void saveStopToRoute(long stopId, long routeId) throws InvalidIdException, StopAlreadyExistsException {
+    public void saveStopToRoute(
+            long stopId,
+            long routeId
+    ) throws InvalidIdException, StopAlreadyExistsException {
         Optional<Stop> stopOptional = stopRepository.findById(stopId);
         Optional<Route> routeOptional = routeRepository.findById(routeId);
 
@@ -82,6 +93,10 @@ public class StopServiceImpl implements StopService {
 
         Stop stop = stopOptional.get();
         Route route = routeOptional.get();
+        String username = SecurityConfig.getUsernameByContext();
+        if (!route.getCreator().getUsername().equals(username)) {
+            throw new InvalidIdException("You can add stops only to your routes");
+        }
 
         if (route.getStops().contains(stop)) {
             throw new StopAlreadyExistsException("This route already has this stop");
@@ -92,7 +107,10 @@ public class StopServiceImpl implements StopService {
     }
 
     @Override
-    public void addStop(Stop stop, long routeId) throws StopAlreadyExistsException, NoSuchRouteException {
+    public void addStop(
+            Stop stop,
+            long routeId
+    ) throws StopAlreadyExistsException, NoSuchRouteException {
         Stop stopExisting = stopRepository.findByStreetAndNumber(stop.getStreet(), stop.getNumber());
         if (stopExisting != null) {
             throw new StopAlreadyExistsException("Stop " + stop.getStreet() + ", " + stop.getNumber() + " already exists");
@@ -108,7 +126,10 @@ public class StopServiceImpl implements StopService {
     }
 
     @Override
-    public void updateStop(Stop stop, long id) throws NoSuchStopException {
+    public void updateStop(
+            Stop stop,
+            long id
+    ) throws NoSuchStopException {
         Optional<Stop> stopOptional = stopRepository.findById(id);
         if (!stopOptional.isPresent()) {
             throw new NoSuchStopException("Stop {id " + id + "} doesn't exist");

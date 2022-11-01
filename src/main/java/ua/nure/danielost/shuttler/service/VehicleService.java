@@ -8,19 +8,19 @@ import java.util.List;
 
 public interface VehicleService {
 
-    public Vehicle addVehicle(Vehicle vehicle, long routeId, long userId) throws NoSuchUserException, NoSuchRouteException, InvalidIdException;
+    Vehicle addVehicle(Vehicle vehicle, long routeId, long userId) throws NoSuchUserException, NoSuchRouteException, InvalidIdException;
 
-    public List<Vehicle> getAll() throws EmptyTableException;
+    List<Vehicle> getAll() throws EmptyTableException;
 
-    public Vehicle getByVin(String vin) throws NoSuchVehicleException;
+    Vehicle getByVin(String vin) throws NoSuchVehicleException;
 
-    public void updateVehicle(Vehicle vehicle, String id, long route_id) throws NoSuchVehicleException;
+    void updateVehicle(Vehicle vehicle, String id, long route_id) throws NoSuchVehicleException, InvalidIdException;
 
-    public void deleteVehicle(String vin) throws NoSuchVehicleException;
+    void deleteVehicle(String vin) throws NoSuchVehicleException, InvalidIdException;
 
-    public Route getRoute(String vin) throws NoSuchVehicleException;
+    Route getRoute(String vin) throws NoSuchVehicleException;
 
-    public void increaseAmountOfPassengers(String vin) throws NoSuchVehicleException;
+    void increaseAmountOfPassengers(String vin) throws NoSuchVehicleException;
 
-    public void decreaseAmountOfPassengers(String vin) throws NoSuchVehicleException;
+    void decreaseAmountOfPassengers(String vin) throws NoSuchVehicleException;
 }

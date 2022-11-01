@@ -1,7 +1,6 @@
 package ua.nure.danielost.shuttler.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.danielost.shuttler.model.Route;
@@ -23,10 +22,10 @@ public class OrganizerControllerV1 {
     @Autowired
     private StopService stopService;
 
-    @PostMapping("/createRoute")
+    @PostMapping("/createRoute/{id}")
     public ResponseEntity<String> addRoute(
             @RequestBody Route route,
-            @RequestParam long id
+            @PathVariable long id
     ) {
         try {
             routeService.saveRoute(route, id);
@@ -60,15 +59,16 @@ public class OrganizerControllerV1 {
     }
 
     @PostMapping("/addVehicle/{routeId}")
-    public ResponseEntity<Vehicle> addVehicle(
+    public ResponseEntity<String> addVehicle(
             @RequestBody Vehicle vehicle,
             @PathVariable long routeId,
             @RequestParam long userId
     ) {
         try {
-            return ResponseEntity.ok(vehicleService.addVehicle(vehicle, routeId, userId));
+            vehicleService.addVehicle(vehicle, routeId, userId);
+            return ResponseEntity.ok("Vehicle added");
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -86,7 +86,7 @@ public class OrganizerControllerV1 {
         }
     }
 
-    @DeleteMapping("deleteVehicle/{vin}")
+    @DeleteMapping("/deleteVehicle/{vin}")
     public ResponseEntity<String> deleteVehicle(@PathVariable String vin) {
         try {
             vehicleService.deleteVehicle(vin);

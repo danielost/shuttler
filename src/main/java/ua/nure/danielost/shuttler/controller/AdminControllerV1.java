@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.nure.danielost.shuttler.exception.NoSuchUserException;
 import ua.nure.danielost.shuttler.model.Stop;
 import ua.nure.danielost.shuttler.model.User;
+import ua.nure.danielost.shuttler.service.AdminService;
 import ua.nure.danielost.shuttler.service.RouteService;
 import ua.nure.danielost.shuttler.service.StopService;
 import ua.nure.danielost.shuttler.service.UserService;
@@ -26,12 +26,35 @@ public class AdminControllerV1 {
     @Autowired
     private StopService stopService;
 
+    @Autowired
+    private AdminService adminService;
+
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers() {
         try {
             return ResponseEntity.ok(userService.getAll());
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @DeleteMapping("/deleteRoute/{id}")
+    public ResponseEntity<String> deleteRouteById(@PathVariable long id) {
+        try {
+            adminService.deleteRoute(id);
+            return ResponseEntity.ok("Route {id: " + id + "} deleted");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("deleteVehicle/{vin}")
+    public ResponseEntity<String> deleteVehicle(@PathVariable String vin) {
+        try {
+            adminService.deleteVehicle(vin);
+            return ResponseEntity.ok("Vehicle {vin: " + vin + "} deleted");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -104,9 +127,9 @@ public class AdminControllerV1 {
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable long id) {
         try {
-            userService.delete(id);
+            adminService.deleteUser(id);
             return ResponseEntity.ok("User {id: " + id + "} has been deleted.");
-        } catch (NoSuchUserException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -123,7 +146,8 @@ public class AdminControllerV1 {
 
     @PutMapping("/updateStop/{id}")
     public ResponseEntity<String> updateStop(
-            @RequestBody Stop stop, @PathVariable long id
+            @RequestBody Stop stop,
+            @PathVariable long id
     ) {
         try {
             stopService.updateStop(stop, id);

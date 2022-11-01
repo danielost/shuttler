@@ -18,13 +18,11 @@ public class ShuttlerUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user;
-
         try {
-            user = userService.findByUsername(username);
+            User user = userService.findByUsername(username);
+            return JwtUserFactory.create(user);
         } catch (NoSuchUserException e) {
             throw new UsernameNotFoundException("User not found");
         }
-        return JwtUserFactory.create(user);
     }
 }

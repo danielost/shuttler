@@ -15,7 +15,7 @@ public class IotControllerV1 {
     @Autowired
     private VehicleService vehicleService;
 
-    @PutMapping("/increasePassQuantity")
+    @PutMapping("/up")
     public ResponseEntity<String> increasePassengerQuantity(@RequestParam String vin) {
         try {
             vehicleService.increaseAmountOfPassengers(vin);
@@ -29,7 +29,7 @@ public class IotControllerV1 {
         }
     }
 
-    @PutMapping("/decreasePassQuantity")
+    @PutMapping("/down")
     public ResponseEntity<String> decreasePassengerQuantity(@RequestParam String vin) {
         try {
             vehicleService.decreaseAmountOfPassengers(vin);
