@@ -42,26 +42,4 @@ public class VehicleControllerV1 {
             return ResponseEntity.badRequest().body(null);
         }
     }
-
-    // TODO Create new role - IoT
-    @PutMapping("/increasePassQuantity")
-    public ResponseEntity<String> increasePassengerQuantity(@RequestParam String vin) {
-        try {
-            vehicleService.increaseAmountOfPassengers(vin);
-            return ResponseEntity.ok("Amount increased");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    // TODO Create new role - IoT
-    @PutMapping("/decreasePassQuantity")
-    public ResponseEntity<String> decreasePassengerQuantity(@RequestParam String vin) {
-        try {
-            vehicleService.decreaseAmountOfPassengers(vin);
-            return ResponseEntity.ok("Amount decreased");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 }
