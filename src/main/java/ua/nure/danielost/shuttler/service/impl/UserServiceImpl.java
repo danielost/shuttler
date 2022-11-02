@@ -1,4 +1,4 @@
-package ua.nure.danielost.shuttler.service;
+package ua.nure.danielost.shuttler.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +10,8 @@ import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.security.jwt.repository.RoleRepository;
 import ua.nure.danielost.shuttler.security.jwt.repository.UserRepository;
+import ua.nure.danielost.shuttler.service.RouteService;
+import ua.nure.danielost.shuttler.service.UserService;
 
 import javax.management.relation.RoleNotFoundException;
 import java.util.*;

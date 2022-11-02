@@ -1,4 +1,4 @@
-package ua.nure.danielost.shuttler.service;
+package ua.nure.danielost.shuttler.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +8,7 @@ import ua.nure.danielost.shuttler.model.*;
 import ua.nure.danielost.shuttler.security.jwt.repository.RouteRepository;
 import ua.nure.danielost.shuttler.security.jwt.repository.StopRepository;
 import ua.nure.danielost.shuttler.security.jwt.repository.UserRepository;
+import ua.nure.danielost.shuttler.service.RouteService;
 
 import java.util.ArrayList;
 import java.util.List;
