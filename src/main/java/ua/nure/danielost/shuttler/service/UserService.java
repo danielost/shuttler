@@ -34,4 +34,6 @@ public interface UserService {
     List<User> getAllUsersByType(String type);
 
     Set<Route> getSavedRoutes(long id) throws InvalidIdException, NoSuchUserException;
+
+    void subscribe(long id) throws InvalidIdException;
 }

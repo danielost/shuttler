@@ -1,6 +1,7 @@
 package ua.nure.danielost.shuttler.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.configuration.SecurityConfig;
 import ua.nure.danielost.shuttler.exception.EmptyTableException;
@@ -36,6 +37,24 @@ public class VehicleServiceImpl implements VehicleService {
             throw new NoSuchVehicleException("No vehicles with " + vin + " vin code in database");
         }
         return vehicleOptional.get();
+    }
+
+    @Override
+    public List<Vehicle> getVehiclesByUserId(long userId) throws InvalidIdException {
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (!userOptional.isPresent()) {
+            throw new InvalidIdException("No users with id {id: " + userId + "} in database");
+        }
+
+        String username = SecurityConfig.getUsernameByContext();
+        User user = userOptional.get();
+
+        if (!user.getUsername().equals(username)) {
+            throw new UsernameNotFoundException("You can see only your own vehicles");
+        }
+
+        return vehicleRepository.findByCreator(user);
     }
 
     @Override

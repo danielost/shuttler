@@ -23,4 +23,6 @@ public interface VehicleService {
     void increaseAmountOfPassengers(String vin) throws NoSuchVehicleException;
 
     void decreaseAmountOfPassengers(String vin) throws NoSuchVehicleException;
+
+    List<Vehicle> getVehiclesByUserId(long userId) throws InvalidIdException;
 }

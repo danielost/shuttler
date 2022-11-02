@@ -1,19 +1,17 @@
 package ua.nure.danielost.shuttler.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.configuration.SecurityConfig;
 import ua.nure.danielost.shuttler.exception.*;
+import ua.nure.danielost.shuttler.service.RouteService;
 import ua.nure.danielost.shuttler.model.*;
 import ua.nure.danielost.shuttler.repository.RouteRepository;
 import ua.nure.danielost.shuttler.repository.StopRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
-import ua.nure.danielost.shuttler.service.RouteService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class RouteServiceImpl implements RouteService {
@@ -120,7 +118,7 @@ public class RouteServiceImpl implements RouteService {
             long routeId,
             long departId,
             long destinationId
-    ) throws InvalidIdException {
+    ) throws InvalidIdException, NoSubscriptionException {
         if (departId == destinationId) {
             throw new InvalidIdException("Stops can't be the same");
         }
@@ -131,6 +129,12 @@ public class RouteServiceImpl implements RouteService {
 
         if (!routeOptional.isPresent() || !departStopOptional.isPresent() || !destinationStopOptional.isPresent()) {
             throw new InvalidIdException("No routes or stops with such IDs");
+        }
+
+        String username = SecurityConfig.getUsernameByContext();
+        User user = userRepository.findByUsername(username);
+        if (user.getSubscriptions().isEmpty()) {
+            throw new NoSubscriptionException("User {" + username + "} doesn't have a subscription");
         }
 
         Route route = routeOptional.get();
@@ -150,7 +154,27 @@ public class RouteServiceImpl implements RouteService {
             }
         }
 
+        optimalRoutes.sort(Comparator.comparing(Route::getCongestion));
+
         return optimalRoutes;
+    }
+
+    @Override
+    public List<Route> getRoutesByUserId(long userId) throws InvalidIdException {
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (!userOptional.isPresent()) {
+            throw new InvalidIdException("No users with id {id: " + userId + "} in database");
+        }
+
+        String username = SecurityConfig.getUsernameByContext();
+        User user = userOptional.get();
+
+        if (!user.getUsername().equals(username)) {
+            throw new UsernameNotFoundException("You can see only your own routes");
+        }
+
+        return routeRepository.findByCreator(user);
     }
 
     private boolean routeContainsStops(

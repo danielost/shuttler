@@ -74,4 +74,15 @@ public class UserControllerV1 {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PutMapping("/{id}/subscribe")
+    public ResponseEntity<String> getSubscription(@PathVariable long id) {
+        try {
+            userService.subscribe(id);
+            return ResponseEntity.ok("Subscription acquired");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error occurred while proceeding your subscription");
+        }
+    }
+
 }

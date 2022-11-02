@@ -1,6 +1,7 @@
 package ua.nure.danielost.shuttler.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.nure.danielost.shuttler.model.Route;
@@ -8,6 +9,8 @@ import ua.nure.danielost.shuttler.model.Vehicle;
 import ua.nure.danielost.shuttler.service.RouteService;
 import ua.nure.danielost.shuttler.service.StopService;
 import ua.nure.danielost.shuttler.service.VehicleService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/organizer")
@@ -21,6 +24,24 @@ public class OrganizerControllerV1 {
 
     @Autowired
     private StopService stopService;
+
+    @GetMapping("/getRoutes/{userId}")
+    public ResponseEntity<List<Route>> getRoutesByUserId(@PathVariable long userId) {
+        try {
+            return ResponseEntity.ok(routeService.getRoutesByUserId(userId));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("/getVehicles/{userId}")
+    public ResponseEntity<List<Vehicle>> getVehiclesByUserId(@PathVariable long userId) {
+        try {
+            return ResponseEntity.ok(vehicleService.getVehiclesByUserId(userId));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
 
     @PostMapping("/createRoute/{id}")
     public ResponseEntity<String> addRoute(

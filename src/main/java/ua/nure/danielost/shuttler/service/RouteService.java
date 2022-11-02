@@ -28,7 +28,9 @@ public interface RouteService {
 
     List<Route> getRoutes(VehicleType type);
 
-    List<Route> getOptimalRoutes(long routeId, long departId, long destinationId) throws NoSuchRouteException, InvalidIdException;
+    List<Route> getOptimalRoutes(long routeId, long departId, long destinationId) throws NoSuchRouteException, InvalidIdException, NoSubscriptionException;
 
     List<Route> findByStops(long stopA, long stopB) throws NoSuchStopException;
+
+    List<Route> getRoutesByUserId(long userId) throws InvalidIdException;
 }

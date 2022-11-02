@@ -5,12 +5,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.configuration.SecurityConfig;
 import ua.nure.danielost.shuttler.exception.*;
+import ua.nure.danielost.shuttler.service.RouteService;
 import ua.nure.danielost.shuttler.model.Role;
 import ua.nure.danielost.shuttler.model.Route;
+import ua.nure.danielost.shuttler.model.Subscription;
 import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.repository.RoleRepository;
+import ua.nure.danielost.shuttler.repository.SubscriptionRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
-import ua.nure.danielost.shuttler.service.RouteService;
 import ua.nure.danielost.shuttler.service.UserService;
 
 import javax.management.relation.RoleNotFoundException;
@@ -27,6 +29,34 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RouteService routeService;
+
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
+
+    @Override
+    public void subscribe(long id) throws InvalidIdException {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (!userOptional.isPresent()) {
+            throw new InvalidIdException("Id {" + id + "} is invalid");
+        }
+
+        User user = userOptional.get();
+        String username = SecurityConfig.getUsernameByContext();
+
+        if (!username.equals(user.getUsername())) {
+            throw new InvalidIdException("You can't buy subscriptions for other users");
+        }
+
+        if (!user.getSubscriptions().isEmpty()) {
+            throw new UnsupportedOperationException("User is already subscribed");
+        }
+
+        Subscription subscription = subscriptionRepository.findByName("monthly");
+        List<Subscription> subscriptions = new ArrayList<>();
+        subscriptions.add(subscription);
+        user.setSubscriptions(subscriptions);
+        userRepository.save(user);
+    }
 
     @Override
     public void delete(long id) throws NoSuchUserException, InvalidIdException {

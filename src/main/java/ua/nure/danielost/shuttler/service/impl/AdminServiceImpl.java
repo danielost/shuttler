@@ -5,13 +5,13 @@ import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.exception.NoSuchRouteException;
 import ua.nure.danielost.shuttler.exception.NoSuchUserException;
 import ua.nure.danielost.shuttler.exception.NoSuchVehicleException;
+import ua.nure.danielost.shuttler.service.AdminService;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.model.Vehicle;
 import ua.nure.danielost.shuttler.repository.RouteRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
 import ua.nure.danielost.shuttler.repository.VehicleRepository;
-import ua.nure.danielost.shuttler.service.AdminService;
 
 import java.util.Optional;
 
