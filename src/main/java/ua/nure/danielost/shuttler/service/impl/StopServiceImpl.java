@@ -9,8 +9,8 @@ import ua.nure.danielost.shuttler.exception.NoSuchStopException;
 import ua.nure.danielost.shuttler.exception.StopAlreadyExistsException;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.Stop;
-import ua.nure.danielost.shuttler.security.jwt.repository.RouteRepository;
-import ua.nure.danielost.shuttler.security.jwt.repository.StopRepository;
+import ua.nure.danielost.shuttler.repository.RouteRepository;
+import ua.nure.danielost.shuttler.repository.StopRepository;
 import ua.nure.danielost.shuttler.service.StopService;
 
 import java.util.List;

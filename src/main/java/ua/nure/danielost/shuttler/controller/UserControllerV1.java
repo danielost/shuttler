@@ -26,7 +26,6 @@ public class UserControllerV1 {
         }
     }
 
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable long id) {
         try {

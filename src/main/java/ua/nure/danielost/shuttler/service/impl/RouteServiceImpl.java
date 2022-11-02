@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.configuration.SecurityConfig;
 import ua.nure.danielost.shuttler.exception.*;
 import ua.nure.danielost.shuttler.model.*;
-import ua.nure.danielost.shuttler.security.jwt.repository.RouteRepository;
-import ua.nure.danielost.shuttler.security.jwt.repository.StopRepository;
-import ua.nure.danielost.shuttler.security.jwt.repository.UserRepository;
+import ua.nure.danielost.shuttler.repository.RouteRepository;
+import ua.nure.danielost.shuttler.repository.StopRepository;
+import ua.nure.danielost.shuttler.repository.UserRepository;
 import ua.nure.danielost.shuttler.service.RouteService;
 
 import java.util.ArrayList;

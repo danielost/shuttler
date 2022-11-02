@@ -74,12 +74,11 @@
 			<artifactId>flyway-mysql</artifactId>
 		</dependency>
 
-		<!-- Lombok -->
-<!--		<dependency>-->
-<!--			<groupId>org.projectlombok</groupId>-->
-<!--			<artifactId>lombok</artifactId>-->
-<!--			<optional>true</optional>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>com.smattme</groupId>
+			<artifactId>mysql-backup4j</artifactId>
+			<version>1.0.1</version>
+		</dependency>
 
 		<!-- Spring test -->
 		<dependency>

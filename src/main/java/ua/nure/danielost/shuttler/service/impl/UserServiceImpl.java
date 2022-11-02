@@ -8,8 +8,8 @@ import ua.nure.danielost.shuttler.exception.*;
 import ua.nure.danielost.shuttler.model.Role;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.User;
-import ua.nure.danielost.shuttler.security.jwt.repository.RoleRepository;
-import ua.nure.danielost.shuttler.security.jwt.repository.UserRepository;
+import ua.nure.danielost.shuttler.repository.RoleRepository;
+import ua.nure.danielost.shuttler.repository.UserRepository;
 import ua.nure.danielost.shuttler.service.RouteService;
 import ua.nure.danielost.shuttler.service.UserService;
 

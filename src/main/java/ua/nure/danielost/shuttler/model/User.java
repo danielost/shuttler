@@ -42,6 +42,14 @@ public class User {
     )
     private List<Role> roles = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "subscription_id", referencedColumnName = "id")
+    )
+    private List<Subscription> subscriptions = new ArrayList<>();
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "creator")
     private Set<Route> createdRoutes = new HashSet<>();
 
@@ -49,6 +57,14 @@ public class User {
     private Set<Vehicle> ownedVehicles = new HashSet<>();
 
     public User() {}
+
+    public List<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(List<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
 
     public Set<Vehicle> getOwnedVehicles() {
         return ownedVehicles;
