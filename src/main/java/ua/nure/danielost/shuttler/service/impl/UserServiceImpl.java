@@ -129,8 +129,9 @@ public class UserServiceImpl implements UserService {
         }
 
         Route route = routeService.getRouteById(routeId);
-
-        user.saveRoute(route);
+        Set<Route> routes = user.getSavedRoutes();
+        routes.add(route);
+        user.setSavedRoutes(routes);
         userRepository.save(user);
     }
 
@@ -253,8 +254,9 @@ public class UserServiceImpl implements UserService {
             throw new InvalidIdException("You are allowed to remove routes only from your account");
         }
         Route route = routeService.getRouteById(routeId);
-
-        user.deleteRoute(route);
+        Set<Route> routes = user.getSavedRoutes();
+        routes.remove(route);
+        user.setSavedRoutes(routes);
         userRepository.save(user);
     }
 }
