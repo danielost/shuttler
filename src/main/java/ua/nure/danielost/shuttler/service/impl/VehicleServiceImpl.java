@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.configuration.SecurityConfig;
 import ua.nure.danielost.shuttler.exception.EmptyTableException;
 import ua.nure.danielost.shuttler.exception.InvalidIdException;
+import ua.nure.danielost.shuttler.exception.InvalidVinCodeException;
 import ua.nure.danielost.shuttler.exception.NoSuchVehicleException;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.User;
@@ -17,6 +18,9 @@ import ua.nure.danielost.shuttler.service.VehicleService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
@@ -143,10 +147,11 @@ public class VehicleServiceImpl implements VehicleService {
             Vehicle vehicle,
             long routeId,
             long userId
-    ) throws InvalidIdException {
+    ) throws InvalidIdException, InvalidVinCodeException {
         Optional<Route> routeOptional = routeRepository.findById(routeId);
         Optional<User> userOptional = userRepository.findById(userId);
         Optional<Vehicle> vehicleOptional = vehicleRepository.findById(vehicle.getVin());
+
         if (!routeOptional.isPresent() || !userOptional.isPresent()) {
             throw new InvalidIdException("Invalid user or route ID");
         }
@@ -159,6 +164,14 @@ public class VehicleServiceImpl implements VehicleService {
         String username = SecurityConfig.getUsernameByContext();
         if (!route.getCreator().getUsername().equals(username)) {
             throw new InvalidIdException("You can add vehicles only to your routes");
+        }
+
+        String regex = "[(A-H|J-N|P|R-Z|0-9)]{17}";
+        Pattern vinPattern = Pattern.compile(regex);
+        Matcher matcher = vinPattern.matcher(vehicle.getVin());
+
+        if (!matcher.find()) {
+            throw new PatternSyntaxException("Invalid vin code", regex, 0);
         }
 
         vehicle.setRoute(route);

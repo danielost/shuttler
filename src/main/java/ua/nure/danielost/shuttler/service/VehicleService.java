@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface VehicleService {
 
-    Vehicle addVehicle(Vehicle vehicle, long routeId, long userId) throws NoSuchUserException, NoSuchRouteException, InvalidIdException;
+    Vehicle addVehicle(Vehicle vehicle, long routeId, long userId) throws NoSuchUserException, NoSuchRouteException, InvalidIdException, InvalidVinCodeException;
 
     List<Vehicle> getAll() throws EmptyTableException;
 
