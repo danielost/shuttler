@@ -36,6 +36,8 @@ public class AuthenticationControllerV1 {
 
     @PostMapping("/login")
     public ResponseEntity<Map<Object, Object>> login(@RequestBody AuthenticationRequestDto requestDto) {
+        Map<Object, Object> response = new HashMap<>();
+
         try {
             String username = requestDto.getUsername();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
@@ -43,24 +45,24 @@ public class AuthenticationControllerV1 {
             User user = userService.findByUsername(username);
             String token = jwtTokenProvider.createToken(username, user.getRoles());
 
-            Map<Object, Object> response = new HashMap<>();
             response.put("username", username);
             response.put("token", token);
 
             return ResponseEntity.ok(response);
-        } catch (NoSuchUserException e) {
-            throw new UsernameNotFoundException("Username not found");
-        } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username or password");
+        } catch (Exception e) {
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
+    public ResponseEntity<Object> registerUser(@RequestBody User user) {
         try {
             return ResponseEntity.ok(userService.register(user));
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            Map<Object, Object> response = new HashMap<>();
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }

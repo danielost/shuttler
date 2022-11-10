@@ -17,6 +17,9 @@ import ua.nure.danielost.shuttler.service.UserService;
 
 import javax.management.relation.RoleNotFoundException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -169,6 +172,23 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByUsername(user.getUsername()) != null) {
             throw new UsernameTakenException("Username is already taken");
         }
+
+        String usernameRegex = "^[a-zA-Z0-9]([._](?![._])|[a-zA-Z0-9]){6,18}[a-zA-Z0-9]$";
+        Pattern usernamePattern = Pattern.compile(usernameRegex);
+        Matcher usernameMatcher = usernamePattern.matcher(user.getUsername());
+
+        if (!usernameMatcher.find()) {
+            throw new PatternSyntaxException("Bad username", usernameRegex, 0);
+        }
+
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$";
+        Pattern passwordPattern = Pattern.compile(passwordRegex);
+        Matcher passwordMatcher = passwordPattern.matcher(user.getPassword());
+
+        if (!passwordMatcher.find()) {
+            throw new PatternSyntaxException("Bad password", passwordRegex, 0);
+        }
+
         Role role = roleRepository.findByName("ROLE_USER");
         List<Role> roles = new ArrayList<>();
         roles.add(role);
