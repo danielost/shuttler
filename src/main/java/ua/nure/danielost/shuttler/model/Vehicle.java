@@ -11,11 +11,11 @@ public class Vehicle {
     @Column(name = "vin")
     private String vin;
 
-    @Column(name = "max_capacity")
-    private int max_capacity;
+    @Column(name = "maxCapacity")
+    private int maxCapacity;
 
-    @Column(name = "current_capacity")
-    private int current_capacity;
+    @Column(name = "currentCapacity")
+    private int currentCapacity;
 
     @JsonIgnore
     @ManyToOne
@@ -46,20 +46,20 @@ public class Vehicle {
         this.vin = vin;
     }
 
-    public int getMax_capacity() {
-        return max_capacity;
+    public int getMaxCapacity() {
+        return maxCapacity;
     }
 
-    public void setMax_capacity(int max_capacity) {
-        this.max_capacity = max_capacity;
+    public void setMaxCapacity(int maxCapacity) {
+        this.maxCapacity = maxCapacity;
     }
 
-    public int getCurrent_capacity() {
-        return current_capacity;
+    public int getCurrentCapacity() {
+        return currentCapacity;
     }
 
-    public void setCurrent_capacity(int current_capacity) {
-        this.current_capacity = current_capacity;
+    public void setCurrentCapacity(int currentCapacity) {
+        this.currentCapacity = currentCapacity;
     }
 
     public Route getRoute() {

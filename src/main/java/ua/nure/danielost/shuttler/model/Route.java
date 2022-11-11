@@ -108,8 +108,8 @@ public class Route {
         int capacity = 0;
         int passengersAmount = 0;
         for (Vehicle vehicle: routeVehicles) {
-            capacity += vehicle.getMax_capacity();
-            passengersAmount += vehicle.getCurrent_capacity();
+            capacity += vehicle.getMaxCapacity();
+            passengersAmount += vehicle.getCurrentCapacity();
         }
 
         return passengersAmount * 1.0 / capacity * 100;
