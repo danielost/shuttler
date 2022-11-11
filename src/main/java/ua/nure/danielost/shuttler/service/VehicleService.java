@@ -20,9 +20,7 @@ public interface VehicleService {
 
     Route getRoute(String vin) throws NoSuchVehicleException;
 
-    void increaseAmountOfPassengers(String vin) throws NoSuchVehicleException;
-
-    void decreaseAmountOfPassengers(String vin) throws NoSuchVehicleException;
+    void modifyAmountOfPassengers(String vin, int amount) throws NoSuchVehicleException;
 
     List<Vehicle> getVehiclesByUserId(long userId) throws InvalidIdException;
 }

@@ -15,28 +15,14 @@ public class IotControllerV1 {
     @Autowired
     private VehicleService vehicleService;
 
-    @PutMapping("/up")
-    public ResponseEntity<String> increasePassengerQuantity(@RequestParam String vin) {
+    @PutMapping("/changeAmount")
+    public ResponseEntity<String> increasePassengerQuantity(@RequestParam String vin, @RequestParam int amount) {
         try {
-            vehicleService.increaseAmountOfPassengers(vin);
-            int passengers = vehicleService.getByVin(vin).getCurrent_capacity();
+            vehicleService.modifyAmountOfPassengers(vin, amount);
+            int passengers = vehicleService.getByVin(vin).getCurrentCapacity();
             return ResponseEntity.ok(
-                    "Amount of passengers of vehicle {vin: " + vin + "} incremented by 1:"
-                            + (passengers - 1) + " -> " + passengers
-            );
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PutMapping("/down")
-    public ResponseEntity<String> decreasePassengerQuantity(@RequestParam String vin) {
-        try {
-            vehicleService.decreaseAmountOfPassengers(vin);
-            int passengers = vehicleService.getByVin(vin).getCurrent_capacity();
-            return ResponseEntity.ok(
-                    "Amount of passengers of vehicle {vin: " + vin + "} decremented by 1:"
-                            + (passengers + 1) + " -> " + passengers
+                    "Amount of passengers of vehicle {vin: " + vin + "} modified: "
+                            + (passengers - amount) + " -> " + passengers
             );
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

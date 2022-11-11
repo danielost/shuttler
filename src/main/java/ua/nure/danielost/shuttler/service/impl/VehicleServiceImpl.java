@@ -77,28 +77,18 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public void increaseAmountOfPassengers(String vin) throws NoSuchVehicleException {
+    public void modifyAmountOfPassengers(
+            String vin,
+            int amount
+    ) throws NoSuchVehicleException {
         Optional<Vehicle> vehicleOptional = vehicleRepository.findById(vin);
         if (!vehicleOptional.isPresent()) {
-            throw new NoSuchVehicleException("No vehicles with " + vin + " vin code in database");
+            throw new NoSuchVehicleException("No such vehicle {vin: " + vin + "} in database");
         }
+
         Vehicle vehicle = vehicleOptional.get();
-        vehicle.setCurrent_capacity(vehicle.getCurrent_capacity() + 1);
+        vehicle.setCurrentCapacity(Math.max(vehicle.getCurrentCapacity() + amount, 0));
         vehicleRepository.save(vehicle);
-    }
-
-    @Override
-    public void decreaseAmountOfPassengers(String vin) throws NoSuchVehicleException {
-        Optional<Vehicle> vehicleOptional = vehicleRepository.findById(vin);
-        if (!vehicleOptional.isPresent()) {
-            throw new NoSuchVehicleException("No vehicles with " + vin + " vin code in database");
-        }
-
-        Vehicle vehicle = vehicleOptional.get();
-        if (vehicle.getCurrent_capacity() > 0) {
-            vehicle.setCurrent_capacity(vehicle.getCurrent_capacity() - 1);
-            vehicleRepository.save(vehicle);
-        }
     }
 
     @Override
@@ -136,8 +126,8 @@ public class VehicleServiceImpl implements VehicleService {
         }
 
         vehicleToUpdate.setRoute(route);
-        vehicleToUpdate.setCurrent_capacity(vehicle.getCurrent_capacity());
-        vehicleToUpdate.setMax_capacity(vehicle.getMax_capacity());
+        vehicleToUpdate.setCurrentCapacity(vehicle.getCurrentCapacity());
+        vehicleToUpdate.setMaxCapacity(vehicle.getMaxCapacity());
 
         vehicleRepository.save(vehicleToUpdate);
     }
