@@ -8,6 +8,8 @@ import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.service.UserService;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -37,15 +39,18 @@ public class UserControllerV1 {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateUser(
+    public ResponseEntity<Map<Object, Object>> updateUser(
             @PathVariable long id,
             @RequestBody User user
     ) {
+        Map<Object, Object> response = new HashMap<>();
         try {
             userService.update(id, user);
-            return ResponseEntity.ok("User id" + id + " has been updated.");
+            response.put("success", "User {id: " + id + "} has been updated.");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -56,7 +61,7 @@ public class UserControllerV1 {
     ) {
         try {
             userService.saveRoute(userId, routeId);
-            return ResponseEntity.ok("Route " + routeId + " successfully saved for user " + userId);
+            return ResponseEntity.ok("Route {id: " + routeId + "} successfully saved for user " + userId);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -10,7 +10,9 @@ import ua.nure.danielost.shuttler.service.RouteService;
 import ua.nure.danielost.shuttler.service.StopService;
 import ua.nure.danielost.shuttler.service.VehicleService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/organizer")
@@ -44,15 +46,18 @@ public class OrganizerControllerV1 {
     }
 
     @PostMapping("/createRoute/{id}")
-    public ResponseEntity<String> addRoute(
+    public ResponseEntity<Map<Object, Object>> addRoute(
             @RequestBody Route route,
             @PathVariable long id
     ) {
+        Map<Object, Object> response = new HashMap<>();
         try {
             routeService.saveRoute(route, id);
-            return ResponseEntity.ok("Route saved");
+            response.put("success", "route saved");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -71,6 +76,7 @@ public class OrganizerControllerV1 {
             @PathVariable long id,
             @RequestBody Route route
     ) {
+        Map<Object, Object> response = new HashMap<>();
         try {
             routeService.updateRouteNumber(id, route);
             return ResponseEntity.ok("Route updated");
