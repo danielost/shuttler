@@ -5,7 +5,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.configuration.SecurityConfig;
 import ua.nure.danielost.shuttler.exception.*;
-import ua.nure.danielost.shuttler.service.RouteService;
 import ua.nure.danielost.shuttler.model.Role;
 import ua.nure.danielost.shuttler.model.Route;
 import ua.nure.danielost.shuttler.model.Subscription;
@@ -13,10 +12,14 @@ import ua.nure.danielost.shuttler.model.User;
 import ua.nure.danielost.shuttler.repository.RoleRepository;
 import ua.nure.danielost.shuttler.repository.SubscriptionRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
+import ua.nure.danielost.shuttler.service.RouteService;
 import ua.nure.danielost.shuttler.service.UserService;
 
 import javax.management.relation.RoleNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -93,6 +96,9 @@ public class UserServiceImpl implements UserService {
         if (!userToUpdate.getUsername().equals(username)) {
             throw new InvalidIdException("You are allowed to update only your personal info");
         }
+
+        user.setUsername(username);
+        userValidator(user);
 
         userToUpdate.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userToUpdate.setFirstName(user.getFirstName());
@@ -173,21 +179,7 @@ public class UserServiceImpl implements UserService {
             throw new UsernameTakenException("Username is already taken");
         }
 
-        String usernameRegex = "^[a-zA-Z0-9]([._](?![._])|[a-zA-Z0-9]){6,18}[a-zA-Z0-9]$";
-        Pattern usernamePattern = Pattern.compile(usernameRegex);
-        Matcher usernameMatcher = usernamePattern.matcher(user.getUsername());
-
-        if (!usernameMatcher.find()) {
-            throw new PatternSyntaxException("Bad username", usernameRegex, 0);
-        }
-
-        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$";
-        Pattern passwordPattern = Pattern.compile(passwordRegex);
-        Matcher passwordMatcher = passwordPattern.matcher(user.getPassword());
-
-        if (!passwordMatcher.find()) {
-            throw new PatternSyntaxException("Bad password", passwordRegex, 0);
-        }
+        userValidator(user);
 
         Role role = roleRepository.findByName("ROLE_USER");
         List<Role> roles = new ArrayList<>();
@@ -196,6 +188,33 @@ public class UserServiceImpl implements UserService {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
 
         return userRepository.save(user);
+    }
+
+    private void userValidator(User user) {
+        String nameRegex = "^[a-zA-Z]{3,30}$";
+        Pattern namePattern = Pattern.compile(nameRegex);
+        Matcher nameMatcher = namePattern.matcher(user.getFirstName());
+        Matcher lastNameMatcher = namePattern.matcher(user.getLastName());
+
+        if (!nameMatcher.find() || !lastNameMatcher.find()) {
+            throw new PatternSyntaxException("Bad first or last name", nameRegex, 0);
+        }
+
+        String usernameRegex = "^[a-zA-Z0-9]([._](?![._])|[a-zA-Z0-9]){6,18}[a-zA-Z0-9]$";
+        Pattern usernamePattern = Pattern.compile(usernameRegex);
+        Matcher usernameMatcher = usernamePattern.matcher(user.getUsername());
+
+        if (!usernameMatcher.find()) {
+            throw new PatternSyntaxException("Bad username", usernameRegex, 0);
+        }
+
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,25}$";
+        Pattern passwordPattern = Pattern.compile(passwordRegex);
+        Matcher passwordMatcher = passwordPattern.matcher(user.getPassword());
+
+        if (!passwordMatcher.find()) {
+            throw new PatternSyntaxException("Bad password", passwordRegex, 0);
+        }
     }
 
     @Override

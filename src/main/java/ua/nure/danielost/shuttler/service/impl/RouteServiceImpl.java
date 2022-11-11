@@ -5,13 +5,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ua.nure.danielost.shuttler.configuration.SecurityConfig;
 import ua.nure.danielost.shuttler.exception.*;
-import ua.nure.danielost.shuttler.service.RouteService;
 import ua.nure.danielost.shuttler.model.*;
 import ua.nure.danielost.shuttler.repository.RouteRepository;
 import ua.nure.danielost.shuttler.repository.StopRepository;
 import ua.nure.danielost.shuttler.repository.UserRepository;
+import ua.nure.danielost.shuttler.service.RouteService;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 @Service
 public class RouteServiceImpl implements RouteService {
@@ -68,6 +71,8 @@ public class RouteServiceImpl implements RouteService {
             throw new InvalidIdException("You can modify only your own routes");
         }
 
+        routeValidator(route);
+
         routeToUpdate.setNumber(route.getNumber());
 
         routeRepository.save(routeToUpdate);
@@ -97,6 +102,8 @@ public class RouteServiceImpl implements RouteService {
         if (!user.getUsername().equals(username)) {
             throw new InvalidIdException("Only you can be the owner of a route created by you");
         }
+
+        routeValidator(route);
 
         route.setCreator(userOptional.get());
 
@@ -142,7 +149,6 @@ public class RouteServiceImpl implements RouteService {
         Stop destinationStop = destinationStopOptional.get();
         List<Route> optimalRoutes = new ArrayList<>();
         List<Route> existingRoutes = routeRepository.findAll();
-
         double congestion = route.getCongestion();
 
         for (Route currentRoute: existingRoutes) {
@@ -153,9 +159,7 @@ public class RouteServiceImpl implements RouteService {
                 optimalRoutes.add(currentRoute);
             }
         }
-
         optimalRoutes.sort(Comparator.comparing(Route::getCongestion));
-
         return optimalRoutes;
     }
 
@@ -239,5 +243,15 @@ public class RouteServiceImpl implements RouteService {
             throw new EmptyTableException("No routes in database");
         }
         return routes;
+    }
+
+    private void routeValidator(Route route) {
+        String numberRegex = "^[0-9]{1,3}$";
+        Pattern numberPattern = Pattern.compile(numberRegex);
+        Matcher numberMatcher = numberPattern.matcher(new StringBuilder(route.getNumber()));
+
+        if (!numberMatcher.find()) {
+            throw new PatternSyntaxException("Bad route number", numberRegex, 0);
+        }
     }
 }
