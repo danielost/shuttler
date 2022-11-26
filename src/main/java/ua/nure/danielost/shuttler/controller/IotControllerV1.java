@@ -16,7 +16,10 @@ public class IotControllerV1 {
     private VehicleService vehicleService;
 
     @PutMapping("/changeAmount")
-    public ResponseEntity<String> increasePassengerQuantity(@RequestParam String vin, @RequestParam int amount) {
+    public ResponseEntity<String> increasePassengerQuantity(
+            @RequestParam String vin,
+            @RequestParam int amount
+    ) {
         try {
             vehicleService.modifyAmountOfPassengers(vin, amount);
             int passengers = vehicleService.getByVin(vin).getCurrentCapacity();

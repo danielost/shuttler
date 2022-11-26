@@ -50,7 +50,7 @@ public class RouteServiceImpl implements RouteService {
                 result.add(route);
             }
         }
-
+        result.sort(Comparator.comparing(Route::getCongestion));
         return result;
     }
 
@@ -71,7 +71,7 @@ public class RouteServiceImpl implements RouteService {
             throw new InvalidIdException("You can modify only your own routes");
         }
 
-        routeValidator(route);
+//        routeValidator(route);
 
         routeToUpdate.setNumber(route.getNumber());
 
@@ -103,7 +103,7 @@ public class RouteServiceImpl implements RouteService {
             throw new InvalidIdException("Only you can be the owner of a route created by you");
         }
 
-        routeValidator(route);
+//        routeValidator(route);
 
         route.setCreator(userOptional.get());
 

@@ -40,6 +40,29 @@ public class UserServiceImpl implements UserService {
     private SubscriptionRepository subscriptionRepository;
 
     @Override
+    public void unsubscribe(long id) throws InvalidIdException {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (!userOptional.isPresent()) {
+            throw new InvalidIdException("Id {" + id + "} is invalid");
+        }
+
+        User user = userOptional.get();
+        String username = SecurityConfig.getUsernameByContext();
+
+        if (!username.equals(user.getUsername())) {
+            throw new InvalidIdException("You can't buy subscriptions for other users");
+        }
+
+        if (!user.getSubscriptions().isEmpty()) {
+            throw new UnsupportedOperationException("User is already subscribed");
+        }
+
+        List<Subscription> subscriptions = new ArrayList<>();
+        user.setSubscriptions(subscriptions);
+        userRepository.save(user);
+    }
+
+    @Override
     public void subscribe(long id) throws InvalidIdException {
         Optional<User> userOptional = userRepository.findById(id);
         if (!userOptional.isPresent()) {

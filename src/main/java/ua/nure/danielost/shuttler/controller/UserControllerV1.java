@@ -90,4 +90,13 @@ public class UserControllerV1 {
         }
     }
 
+    @PutMapping("/{id}/unsubscribe")
+    public ResponseEntity<String> deleteSubscription(@PathVariable long id) {
+        try {
+            userService.unsubscribe(id);
+            return ResponseEntity.ok("Subscription acquired");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error occurred while proceeding your subscription");
+        }
+    }
 }

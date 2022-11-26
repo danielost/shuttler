@@ -36,4 +36,6 @@ public interface UserService {
     Set<Route> getSavedRoutes(long id) throws InvalidIdException, NoSuchUserException;
 
     void subscribe(long id) throws InvalidIdException;
+
+    void unsubscribe(long id) throws InvalidIdException;
 }
