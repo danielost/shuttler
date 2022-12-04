@@ -53,8 +53,8 @@ public class UserServiceImpl implements UserService {
             throw new InvalidIdException("You can't buy subscriptions for other users");
         }
 
-        if (!user.getSubscriptions().isEmpty()) {
-            throw new UnsupportedOperationException("User is already subscribed");
+        if (user.getSubscriptions().isEmpty()) {
+            throw new UnsupportedOperationException("User is not subscribed");
         }
 
         List<Subscription> subscriptions = new ArrayList<>();

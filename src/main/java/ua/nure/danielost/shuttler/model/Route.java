@@ -24,6 +24,7 @@ public class Route {
     @ManyToMany(mappedBy = "savedRoutes")
     private Set<User> users = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "route")
     private Set<Vehicle> vehicles = new HashSet<>();
 

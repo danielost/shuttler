@@ -9,11 +9,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Configuration
-@EnableScheduling
+//@Configuration
+//@EnableScheduling
 public class DatabaseBackupControllerV1 {
 
-    @Scheduled(cron = "0 30 1 * * ?")
+//    @Scheduled(cron = "0 30 1 * * ?")
     public void schedule() throws IOException, InterruptedException {
         System.out.println("Backup Started at " + new Date());
 

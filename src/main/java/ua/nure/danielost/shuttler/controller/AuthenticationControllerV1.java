@@ -42,6 +42,8 @@ public class AuthenticationControllerV1 {
             response.put("username", username);
             response.put("roles", user.getRoles());
             response.put("subscriptions", user.getSubscriptions());
+            response.put("firstName", user.getFirstName());
+            response.put("lastName", user.getLastName());
             response.put("token", token);
 
             return ResponseEntity.ok(response);

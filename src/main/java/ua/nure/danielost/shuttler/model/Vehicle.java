@@ -17,7 +17,7 @@ public class Vehicle {
     @Column(name = "currentCapacity")
     private int currentCapacity;
 
-    @JsonIgnore
+//    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "route_id")
     private Route route;

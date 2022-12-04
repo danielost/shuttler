@@ -71,8 +71,14 @@ public class RouteServiceImpl implements RouteService {
             throw new InvalidIdException("You can modify only your own routes");
         }
 
-//        routeValidator(route);
+        List<Route> allRoutes = routeRepository.findAll();
+        for (Route r: allRoutes) {
+            if (r.getId() != id && r.getNumber() == route.getNumber()) {
+                throw new UnsupportedOperationException("Number is already taken");
+            }
+        }
 
+        routeToUpdate.setType(route.getType());
         routeToUpdate.setNumber(route.getNumber());
 
         routeRepository.save(routeToUpdate);

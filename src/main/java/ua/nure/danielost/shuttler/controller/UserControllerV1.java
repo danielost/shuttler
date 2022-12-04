@@ -96,7 +96,7 @@ public class UserControllerV1 {
             userService.unsubscribe(id);
             return ResponseEntity.ok("Subscription acquired");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error occurred while proceeding your subscription");
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
